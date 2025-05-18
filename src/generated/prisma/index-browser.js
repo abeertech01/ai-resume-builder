@@ -152,6 +152,17 @@ exports.Prisma.WorkExperienceScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.EducationScalarFieldEnum = {
+  id: 'id',
+  degree: 'degree',
+  school: 'school',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  resumeId: 'resumeId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -170,7 +181,8 @@ exports.Prisma.NullsOrder = {
 
 exports.Prisma.ModelName = {
   Resume: 'Resume',
-  WorkExperience: 'WorkExperience'
+  WorkExperience: 'WorkExperience',
+  Education: 'Education'
 };
 
 /**
