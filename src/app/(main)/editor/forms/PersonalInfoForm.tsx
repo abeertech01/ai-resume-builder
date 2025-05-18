@@ -9,32 +9,51 @@ import {
 import { Input } from "@/components/ui/input";
 import { personalInfoSchema, PersonalInfoValues } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
+import { debounce } from "lodash";
+import { EditorFormProps } from "@/lib/types";
 
-export default function PersonalInfoForm() {
+export default function PersonalInfoForm({
+  resumeData,
+  setResumeData,
+}: EditorFormProps) {
   const form = useForm<PersonalInfoValues>({
     resolver: zodResolver(personalInfoSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      jobTitle: "",
-      city: "",
-      country: "",
-      phone: "",
-      email: "",
+      firstName: resumeData.firstName || "",
+      lastName: resumeData.lastName || "",
+      jobTitle: resumeData.jobTitle || "",
+      city: resumeData.city || "",
+      country: resumeData.country || "",
+      phone: resumeData.phone || "",
+      email: resumeData.email || "",
     },
   });
 
+  let lastValuesRef = useRef({});
   useEffect(() => {
-    const { unsubscribe } = form.watch(async () => {
+    const debouncedValidateAndUpdate = debounce(async (values) => {
+      const isSame =
+        JSON.stringify(values) === JSON.stringify(lastValuesRef.current);
+      if (isSame) return; // prevent re-triggering for the same values
+
       const isValid = await form.trigger();
       if (!isValid) return;
-      // Update resume data
+
+      lastValuesRef.current = values; // update last validated values
+      setResumeData({ ...resumeData, ...values });
+    }, 500);
+
+    const subscription = form.watch((values) => {
+      debouncedValidateAndUpdate(values);
     });
 
-    return unsubscribe;
-  }, [form]);
+    return () => {
+      subscription.unsubscribe();
+      debouncedValidateAndUpdate.cancel();
+    };
+  }, [form, setResumeData]);
 
   return (
     <div className="mx-auto max-w-xl space-y-6">

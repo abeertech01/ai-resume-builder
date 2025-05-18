@@ -11,15 +11,46 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { EditorFormProps } from "@/lib/types";
+import { useEffect, useRef } from "react";
+import { debounce } from "lodash";
 
-export default function GeneralInfoForm() {
+export default function GeneralInfoForm({
+  resumeData,
+  setResumeData,
+}: EditorFormProps) {
   const form = useForm<GeneralInfoValues>({
     resolver: zodResolver(generalInfoSchema),
     defaultValues: {
-      title: "",
-      description: "",
+      title: resumeData.title || "",
+      description: resumeData.description || "",
     },
   });
+
+  let lastValuesRef = useRef({});
+  useEffect(() => {
+    const debouncedValidateAndUpdate = debounce(async (values) => {
+      const isSame =
+        JSON.stringify(values) === JSON.stringify(lastValuesRef.current);
+      if (isSame) return; // prevent re-triggering for the same values
+
+      const isValid = await form.trigger();
+      if (!isValid) return;
+
+      lastValuesRef.current = values; // update last validated values
+      setResumeData({ ...resumeData, ...values });
+    }, 500);
+
+    const subscription = form.watch((values) => {
+      debouncedValidateAndUpdate(values);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+      debouncedValidateAndUpdate.cancel();
+    };
+  }, [form, setResumeData]);
+
   return (
     <div className="mx-auto max-w-xl space-y-6">
       <div className="space-y-1.5 text-center">
