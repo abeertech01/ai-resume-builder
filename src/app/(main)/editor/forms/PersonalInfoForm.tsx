@@ -13,6 +13,7 @@ import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { debounce } from "lodash";
 import { EditorFormProps } from "@/lib/types";
+import { Button } from "@/components/ui/button";
 
 export default function PersonalInfoForm({
   resumeData,
@@ -55,6 +56,8 @@ export default function PersonalInfoForm({
     };
   }, [form, setResumeData]);
 
+  const photoInputRef = useRef<HTMLInputElement>(null);
+
   return (
     <div className="mx-auto max-w-xl space-y-6">
       <div className="space-y-1.5 text-center">
@@ -69,17 +72,32 @@ export default function PersonalInfoForm({
             render={({ field: { value, ...fieldValues } }) => (
               <FormItem>
                 <FormLabel>Your photo</FormLabel>
-                <FormControl>
-                  <Input
-                    {...fieldValues}
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      fieldValues.onChange(file);
+                <div className="flex items-center gap-2">
+                  <FormControl>
+                    <Input
+                      {...fieldValues}
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        fieldValues.onChange(file);
+                      }}
+                      ref={photoInputRef}
+                    />
+                  </FormControl>
+                  <Button
+                    variant={"secondary"}
+                    type="button"
+                    onClick={() => {
+                      fieldValues.onChange(null);
+                      if (photoInputRef.current) {
+                        photoInputRef.current.value = "";
+                      }
                     }}
-                  />
-                </FormControl>
+                  >
+                    Remove
+                  </Button>
+                </div>
                 <FormMessage />
               </FormItem>
             )}
