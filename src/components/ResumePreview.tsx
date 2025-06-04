@@ -31,6 +31,7 @@ const ResumePreview: FC<ComponentProps> = ({ resumeData, className }) => {
           zoom: (1 / 794) * width,
         }}
       >
+        <pre>{JSON.stringify(resumeData, null, 2)}</pre>
         <PersonalInfoHeader resumeData={resumeData} />
         <SummarySection resumeData={resumeData} />
         <WorkExperienceSection resumeData={resumeData} />
@@ -65,6 +66,7 @@ function PersonalInfoHeader({ resumeData }: ResumeSectionProps) {
 
   useEffect(() => {
     const objectUrl = photo instanceof File ? URL.createObjectURL(photo) : "";
+
     if (objectUrl) setPhotoSrc(objectUrl);
     if (photo === null) setPhotoSrc("");
     return () => URL.revokeObjectURL(objectUrl);

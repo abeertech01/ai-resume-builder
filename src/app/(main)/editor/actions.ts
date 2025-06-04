@@ -9,8 +9,6 @@ import path from "path";
 export async function saveResume(values: ResumeValues) {
   const { id } = values;
 
-  console.log("received values", values);
-
   const { photo, workExperiences, educations, ...resumeValues } =
     resumeSchema.parse(values);
 
@@ -37,9 +35,19 @@ export async function saveResume(values: ResumeValues) {
       await del(existingResume.photoUrl);
     }
 
-    const blob = await put(`resume_photos/${path.extname(photo.name)}`, photo, {
-      access: "public",
-    });
+    const imgName =
+      crypto
+        .getRandomValues(new Uint8Array(16))
+        .reduce((str, byte) => str + byte.toString(16).padStart(2, "0"), "")
+        .slice(0, 14) + Date.now().toString().slice(-8);
+
+    const blob = await put(
+      `resume_photos/${imgName}${path.extname(photo.name)}`,
+      photo,
+      {
+        access: "public",
+      },
+    );
 
     newPhotoUrl = blob.url;
   } else if (photo === null) {
