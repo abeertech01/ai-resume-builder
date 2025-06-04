@@ -11,7 +11,7 @@ import { personalInfoSchema, PersonalInfoValues } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
-import { debounce } from "lodash";
+import { debounce, last, set } from "lodash";
 import { EditorFormProps } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 
@@ -32,17 +32,34 @@ export default function PersonalInfoForm({
     },
   });
 
+  function convertFile2Obj(file: File) {
+    return file instanceof File
+      ? {
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          lastModified: file.lastModified,
+        }
+      : {};
+  }
+
   let lastValuesRef = useRef({});
   useEffect(() => {
     const debouncedValidateAndUpdate = debounce(async (values) => {
+      const photoFileObj = convertFile2Obj(values.photo as File);
+      const tempValues = {
+        ...values,
+        photo: { ...photoFileObj },
+      };
+
       const isSame =
-        JSON.stringify(values) === JSON.stringify(lastValuesRef.current);
+        JSON.stringify(tempValues) === JSON.stringify(lastValuesRef.current);
       if (isSame) return; // prevent re-triggering for the same values
 
       const isValid = await form.trigger();
       if (!isValid) return;
 
-      lastValuesRef.current = values; // update last validated values
+      lastValuesRef.current = tempValues; // update last validated values
       setResumeData({ ...resumeData, ...values });
     }, 500);
 
@@ -54,7 +71,7 @@ export default function PersonalInfoForm({
       subscription.unsubscribe();
       debouncedValidateAndUpdate.cancel();
     };
-  }, [form, setResumeData]);
+  }, [form, resumeData, setResumeData]);
 
   const photoInputRef = useRef<HTMLInputElement>(null);
 
