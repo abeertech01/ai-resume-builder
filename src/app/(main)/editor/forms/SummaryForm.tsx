@@ -4,6 +4,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { EditorFormProps } from "@/lib/types";
@@ -12,6 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { debounce } from "lodash";
 import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
+import GenerateSummaryButton from "./GenerateSummaryButton";
 
 export default function SummaryForm({
   resumeData,
@@ -71,6 +73,13 @@ export default function SummaryForm({
                     placeholder="A brief, engaging text about yourself"
                   />
                 </FormControl>
+                <FormMessage />
+                <GenerateSummaryButton
+                  resumeData={resumeData}
+                  onSummaryGenerated={(summary) =>
+                    form.setValue("summary", summary)
+                  }
+                />
               </FormItem>
             )}
           />
