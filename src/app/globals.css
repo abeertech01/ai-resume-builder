@@ -94,7 +94,7 @@
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216); /* approx HSL 0 62.8% 30.6% */
-  --border: oklch(1 0 0 / 10%);
+  --border: oklch(0.149 0 0);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.985 0 0); /* maps to 0 0% 83.1% */
   --chart-1: oklch(0.488 0.243 264.376); /* HSL: 220 70% 50% */
@@ -119,4 +119,20 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@media print {
+  #resumePreviewContent {
+    zoom: 1 !important;
+    padding: 0;
+  }
+}
+
+#resumePreviewContent {
+  font-family: Inter;
+}
+
+@page {
+  size: A4;
+  margin: 0.6cm;
 }
