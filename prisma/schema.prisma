@@ -54,7 +54,7 @@ model WorkExperience {
   description String?
 
   resumeId String
-  resume   Resume @relation(fields: [resumeId], references: [id])
+  resume   Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
