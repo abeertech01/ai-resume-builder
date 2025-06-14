@@ -12,6 +12,7 @@ import { Button } from "../ui/button";
 import usePremiumModal from "@/hooks/usePremiumModal";
 import { toast } from "sonner";
 import { createCheckoutSession } from "./actions";
+import { env } from "@/env";
 
 interface ComponentProps {}
 
@@ -67,7 +68,7 @@ const PremiumModal: FC<ComponentProps> = () => {
               <Button
                 onClick={() =>
                   handlePremiumClick(
-                    process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_MONTHLY!,
+                    env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_MONTHLY,
                   )
                 }
                 disabled={loading}
@@ -92,7 +93,7 @@ const PremiumModal: FC<ComponentProps> = () => {
                 variant={"premium"}
                 onClick={() =>
                   handlePremiumClick(
-                    process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_PLUS_MONTHLY!,
+                    env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_PLUS_MONTHLY,
                   )
                 }
                 disabled={loading}

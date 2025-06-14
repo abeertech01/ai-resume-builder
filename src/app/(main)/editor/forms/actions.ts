@@ -1,5 +1,6 @@
 "use server";
 
+import { env } from "@/env";
 import {
   GenerateSummaryInput,
   generateSummarySchema,
@@ -10,7 +11,7 @@ import {
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export async function generateSummary(input: GenerateSummaryInput) {
-  const GEN_API = process.env.GEMINI_API_KEY;
+  const GEN_API = env.GEMINI_API_KEY;
 
   if (!GEN_API) throw new Error("Gemini API key not found");
 
@@ -79,7 +80,7 @@ export async function generateSummary(input: GenerateSummaryInput) {
 export async function generateWorkExperience(
   input: GenerateWorkExperienceInput,
 ) {
-  const GEN_API = process.env.GEMINI_API_KEY;
+  const GEN_API = env.GEMINI_API_KEY;
 
   if (!GEN_API) throw new Error("Gemini API key not found");
 
