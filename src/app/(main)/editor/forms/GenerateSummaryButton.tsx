@@ -25,7 +25,9 @@ const GenerateSummaryButton: FC<ComponentProps> = ({
       onSummaryGenerated(aiResponse);
     } catch (error) {
       console.error(error);
-      toast.error("Something went wrong. Please try again later.");
+      toast.error("Something went wrong. Please try again later.", {
+        className: "bg-red-500 text-white",
+      });
     } finally {
       setLoading(false);
     }

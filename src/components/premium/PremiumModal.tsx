@@ -1,6 +1,6 @@
 "use client";
 
-import { FC } from "react";
+import { FC, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -10,6 +10,8 @@ import {
 import { Check } from "lucide-react";
 import { Button } from "../ui/button";
 import usePremiumModal from "@/hooks/usePremiumModal";
+import { toast } from "sonner";
+import { createCheckoutSession } from "./actions";
 
 interface ComponentProps {}
 
@@ -19,8 +21,32 @@ const premiumPlusFeatures = ["Infinite resumes", "Design Customizations"];
 const PremiumModal: FC<ComponentProps> = () => {
   const { open, setOpen } = usePremiumModal();
 
+  const [loading, setLoading] = useState(false);
+
+  async function handlePremiumClick(priceId: string) {
+    try {
+      setLoading(true);
+      const redirectUrl = await createCheckoutSession(priceId);
+      window.location.href = redirectUrl;
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong. Please try again later.", {
+        className: "bg-red-500 text-white",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(open) => {
+        if (!loading) {
+          setOpen(open);
+        }
+      }}
+    >
       <DialogContent className="max-w-2xl dark:drop-shadow-lg dark:drop-shadow-neutral-800/80">
         <DialogHeader>
           <DialogTitle>Resume Builder AI Premium</DialogTitle>
@@ -38,9 +64,18 @@ const PremiumModal: FC<ComponentProps> = () => {
                   </li>
                 ))}
               </ul>
-              <Button>Get Premium</Button>
+              <Button
+                onClick={() =>
+                  handlePremiumClick(
+                    process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_MONTHLY!,
+                  )
+                }
+                disabled={loading}
+              >
+                Get Premium
+              </Button>
             </div>
-            <div className="mx-6 border border-zinc-500" />
+            <div className="mx-6 border-l" />
             <div className="flex w-1/2 flex-col space-y-5">
               <h3 className="bg-gradient-to-r from-green-600 to-green-400 bg-clip-text text-center text-lg font-bold text-transparent">
                 Premium Plus
@@ -53,7 +88,17 @@ const PremiumModal: FC<ComponentProps> = () => {
                   </li>
                 ))}
               </ul>
-              <Button variant={"premium"}>Get Premium Plus</Button>
+              <Button
+                variant={"premium"}
+                onClick={() =>
+                  handlePremiumClick(
+                    process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_PLUS_MONTHLY!,
+                  )
+                }
+                disabled={loading}
+              >
+                Get Premium Plus
+              </Button>
             </div>
           </div>
         </div>
