@@ -1,4 +1,4 @@
-import { SubscriptionLevel } from "./subscriptions";
+import { SubscriptionLevel } from "./subscription";
 
 export function canCreateResume(
   subscriptionLevel: SubscriptionLevel,

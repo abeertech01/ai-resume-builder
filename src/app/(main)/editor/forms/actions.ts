@@ -2,7 +2,7 @@
 
 import { env } from "@/env";
 import { canUseAITools } from "@/lib/permissions";
-import { getUserSubscriptionLevel } from "@/lib/subscriptions";
+import { getUserSubscriptionLevel } from "@/lib/subscription";
 import {
   GenerateSummaryInput,
   generateSummarySchema,

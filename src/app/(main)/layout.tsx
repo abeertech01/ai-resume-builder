@@ -1,7 +1,7 @@
 import PremiumModal from "@/components/premium/PremiumModal";
 import Navbar from "./Navbar";
 import { auth } from "@clerk/nextjs/server";
-import { getUserSubscriptionLevel } from "@/lib/subscriptions";
+import { getUserSubscriptionLevel } from "@/lib/subscription";
 import SubscriptionLevelProvider from "./SubscriptionLevelProvider";
 
 export default async function Layout({

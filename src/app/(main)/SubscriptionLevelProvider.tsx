@@ -1,27 +1,27 @@
 "use client";
 
-import { SubscriptionLevel } from "@/lib/subscriptions";
-import { createContext, FC, ReactNode, useContext } from "react";
+import { SubscriptionLevel } from "@/lib/subscription";
+import { createContext, ReactNode, useContext } from "react";
 
 const SubscriptionLevelContext = createContext<SubscriptionLevel | undefined>(
   undefined,
 );
 
-interface ComponentProps {
+interface SubscriptionLevelProviderProps {
   children: ReactNode;
   userSubscriptionLevel: SubscriptionLevel;
 }
 
-const SubscriptionLevelProvider: FC<ComponentProps> = ({
+export default function SubscriptionLevelProvider({
   children,
   userSubscriptionLevel,
-}) => {
+}: SubscriptionLevelProviderProps) {
   return (
     <SubscriptionLevelContext.Provider value={userSubscriptionLevel}>
       {children}
     </SubscriptionLevelContext.Provider>
   );
-};
+}
 
 export function useSubscriptionLevel() {
   const context = useContext(SubscriptionLevelContext);
@@ -33,5 +33,3 @@ export function useSubscriptionLevel() {
 
   return context;
 }
-
-export default SubscriptionLevelProvider;

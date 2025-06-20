@@ -4,7 +4,7 @@ import { auth } from "@clerk/nextjs/server";
 import { Metadata } from "next";
 import CreateResumeButton from "./CreateResumeButton";
 import ResumeItem from "./ResumeItem";
-import { getUserSubscriptionLevel } from "@/lib/subscriptions";
+import { getUserSubscriptionLevel } from "@/lib/subscription";
 import { canCreateResume } from "@/lib/permissions";
 
 export const metadata: Metadata = {
