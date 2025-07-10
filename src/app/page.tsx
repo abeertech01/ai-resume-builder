@@ -17,7 +17,7 @@ export default function Home() {
         />
         <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
           Create a{" "}
-          <span className="inline-block bg-gradient-to-r from-green-600 to-green-400 bg-clip-text text-transparent">
+          <span className="inline-block bg-gradient-to-r from-sky-600 to-sky-400 bg-clip-text text-transparent">
             Perfect Resume
           </span>{" "}
           in Minutes
