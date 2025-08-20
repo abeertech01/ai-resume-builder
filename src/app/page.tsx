@@ -1,10 +1,9 @@
 import Image from "next/image";
 import logo from "@/assets/logo.png";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import resumePreview from "@/assets/resume-preview.jpg";
+import GetStartedBtn from "./components/GetStartedBtn";
 
-export default function Home() {
+export default async function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-gray-100 px-5 py-12 text-center text-gray-900 md:flex-row md:text-start lg:gap-12">
       <div className="max-w-prose space-y-3">
@@ -27,9 +26,7 @@ export default function Home() {
           helps you design a professional resume, even if you&apos;re not very
           smart.
         </p>
-        <Button asChild size={"lg"} variant={"premium"}>
-          <Link href={"resumes"}>Get started</Link>
-        </Button>
+        <GetStartedBtn />
       </div>
       <div>
         <Image

@@ -1,3 +1,4 @@
+import { env } from "@/env";
 import { deleteUser, insertUser, updateUser } from "@/features/users/db/users";
 import { syncClerkUserMetadata } from "@/services/clerk";
 import { verifyWebhook, WebhookEvent } from "@clerk/nextjs/webhooks";
@@ -6,13 +7,17 @@ import { NextRequest } from "next/server";
 export async function POST(req: NextRequest) {
   console.log("at least webhook route -e dhukse");
   try {
-    const evt = await verifyWebhook(req);
+    const evt = await verifyWebhook(req, {
+      signingSecret: env.CLERK_WEBHOOK_KEY,
+    });
 
     await eventAction(evt);
   } catch (error) {
     console.error("Error processing Clerk webhook:", error);
     return new Response("Internal Server Error", { status: 400 });
   }
+
+  return new Response("", { status: 200 });
 }
 
 const eventAction = async (event: WebhookEvent) => {
