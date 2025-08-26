@@ -10,7 +10,8 @@ export default function GetStartedBtn() {
 
   const getStartedBtn = async () => {
     const userCount = await getUserCount();
-    if (userCount >= 3) {
+    console.log("User count:", userCount);
+    if (userCount >= 20) {
       toast.info("The Developer limited the user number!!", {
         description: "Contact him, if you can't create a new account.",
         position: "top-center",
@@ -19,9 +20,9 @@ export default function GetStartedBtn() {
           color: "white",
         },
       });
-
-      router.push("/resumes");
     }
+
+    router.push("/resumes");
   };
 
   return (
