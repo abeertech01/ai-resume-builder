@@ -67,9 +67,6 @@ export async function generateSummary(input: GenerateSummaryInput) {
     ${skills}
   `;
 
-  console.log("systemMessage", systemMessage);
-  console.log("userMessage", userMessage);
-
   try {
     const genAI = new GoogleGenerativeAI(GEN_API);
     const model = genAI.getGenerativeModel({
@@ -81,7 +78,6 @@ export async function generateSummary(input: GenerateSummaryInput) {
     const response = result.response;
     const summary = response.text();
 
-    console.log("Summary: ", summary);
     return summary;
   } catch (error) {
     console.error("Error generating summary:", error);
@@ -136,8 +132,6 @@ export async function generateWorkExperience(
     const result = await model.generateContent(userMessage);
     const response = result.response;
     const responseText = response.text();
-
-    console.log("responseText", responseText);
 
     return {
       position: responseText.match(/Job title: (.*)/)?.[1] || "",

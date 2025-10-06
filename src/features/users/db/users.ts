@@ -1,17 +1,19 @@
 import { prisma } from "@/lib/prisma";
 import { clerkClient } from "@clerk/nextjs/server";
 
-export type InsertUserData = {
+type InsertUserData = {
   clerkUserId: string;
   email: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   imageUrl: string;
   role: string;
 };
 
 export type UpdateUserData = {
   email?: string;
-  name?: string;
+  firstName?: string | null;
+  lastName?: string | null;
   imageUrl?: string;
   role?: string;
 };
@@ -20,32 +22,14 @@ export type UserFilter = {
   clerkUserId: string;
 };
 
-/**
- * -- check user count ✅
- * -- if user count is 20 or more than 20, ✅
- *   -- if there are one or more users inactive at least for 6 hours ✅
- *     -- delete the oldest inactive user ✅
- *     -- insert the new user ✅
- *     -- if error happens, ✅
- *       -- delete the clerk user and throw an error ✅
- *   -- if there are no users inactive for at least 6 hours, ✅
- *     -- delete the clerk user and return to the end of the process of this function ✅
- * -- if user count is less than 20, ✅
- *   -- create the user ✅
- */
-
 const dbInsertion = async (
-  name: string,
+  firstName: string,
+  lastName: string,
   clerkUserId: string,
   email: string,
   imageUrl: string,
   role: string,
 ) => {
-  // Split the name into first and last name
-  const nameParts = name.trim().split(" ");
-  const firstName = nameParts[0] || "";
-  const lastName = nameParts.slice(1).join(" ") || "";
-
   // Create the new user
   const user = await prisma.user.create({
     data: {
@@ -57,8 +41,6 @@ const dbInsertion = async (
     },
   });
 
-  console.log(`Successfully created new user: ${email}`);
-
   return {
     ...user,
     role, // Return role for syncClerkUserMetadata
@@ -66,7 +48,7 @@ const dbInsertion = async (
 };
 
 export async function insertUser(data: InsertUserData) {
-  const { clerkUserId, email, name, imageUrl, role } = data;
+  const { clerkUserId, email, firstName, lastName, imageUrl, role } = data;
 
   // Check total number of users
   const userCount = await prisma.user.count();
@@ -96,9 +78,19 @@ export async function insertUser(data: InsertUserData) {
             id: oldestInactiveUser.id,
           },
         });
+        await (
+          await clerkClient()
+        ).users.deleteUser(oldestInactiveUser.clerkId);
 
         // insert the new user
-        return await dbInsertion(name, clerkUserId, email, imageUrl, role);
+        return await dbInsertion(
+          firstName,
+          lastName,
+          clerkUserId,
+          email,
+          imageUrl,
+          role,
+        );
       } catch (error) {
         await (await clerkClient()).users.deleteUser(clerkUserId);
 
@@ -116,24 +108,21 @@ export async function insertUser(data: InsertUserData) {
       }
     }
   } else {
-    console.log("user count is less than 3");
-    return await dbInsertion(name, clerkUserId, email, imageUrl, role);
+    console.log("user count is less than 20");
+    return await dbInsertion(
+      firstName,
+      lastName,
+      clerkUserId,
+      email,
+      imageUrl,
+      role,
+    );
   }
 }
 
 export async function updateUser(filter: UserFilter, data: UpdateUserData) {
   const { clerkUserId } = filter;
-  const { email, name, imageUrl, role } = data;
-
-  // Split the name into first and last name if provided
-  let firstName: string | undefined;
-  let lastName: string | undefined;
-
-  if (name) {
-    const nameParts = name.trim().split(" ");
-    firstName = nameParts[0] || "";
-    lastName = nameParts.slice(1).join(" ") || "";
-  }
+  const { email, firstName, lastName, imageUrl, role } = data;
 
   const user = await prisma.user.update({
     where: {

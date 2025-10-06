@@ -61,7 +61,6 @@ export default function EducationForm({
       lastValuesRef.current = currentString;
 
       // Update your state here with latest valid values
-      console.log(currentValues);
       setResumeData({
         ...resumeData,
         educations:

@@ -5,7 +5,6 @@ import { verifyWebhook, WebhookEvent } from "@clerk/nextjs/webhooks";
 import { NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
-  console.log("at least webhook route -e dhukse");
   try {
     const evt = await verifyWebhook(req, {
       signingSecret: env.CLERK_WEBHOOK_KEY,
@@ -28,20 +27,23 @@ const eventAction = async (event: WebhookEvent) => {
         const email = event.data.email_addresses.find(
           (email) => email.id === event.data.primary_email_address_id,
         )?.email_address;
-        const name = `${event.data.first_name} ${event.data.last_name}`.trim();
+        const firstName = event.data.first_name as string;
+        const lastName = event.data.last_name as string;
+
         if (email == null) return new Response("No email", { status: 400 });
-        if (name === "") return new Response("No name", { status: 400 });
+        if (!firstName && !lastName)
+          return new Response("No name", { status: 400 });
 
         if (event.type === "user.created") {
           try {
             const user = await insertUser({
               clerkUserId: event.data.id,
               email,
-              name,
+              firstName,
+              lastName,
               imageUrl: event.data.image_url,
               role: "user",
             });
-
             await syncClerkUserMetadata(user);
           } catch (error) {
             console.error("Failed to insert user:", error);
@@ -57,7 +59,8 @@ const eventAction = async (event: WebhookEvent) => {
             { clerkUserId: event.data.id },
             {
               email,
-              name,
+              firstName,
+              lastName,
               imageUrl: event.data.image_url,
               role: (event.data.public_metadata.role as string) || "user",
             },

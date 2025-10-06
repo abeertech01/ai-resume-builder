@@ -24,14 +24,11 @@ export default async function Page() {
     },
   });
 
-  console.log("subscription: ", subscription);
-
   const priceInfo = subscription
     ? await stripe.prices.retrieve(subscription.stripePriceId, {
         expand: ["product"],
       })
     : null;
-  console.log("priceInfo: ", priceInfo);
 
   return (
     <main className="mx-auto w-full max-w-7xl space-y-6 px-3 py-6">
