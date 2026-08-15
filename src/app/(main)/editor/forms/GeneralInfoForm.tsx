@@ -27,7 +27,7 @@ export default function GeneralInfoForm({
     },
   });
 
-  let lastValuesRef = useRef({});
+  const lastValuesRef = useRef({});
   useEffect(() => {
     const debouncedValidateAndUpdate = debounce(async (values) => {
       const isSame =

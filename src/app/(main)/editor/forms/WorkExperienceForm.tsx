@@ -49,7 +49,7 @@ export default function WorkExperienceForm({
     },
   });
 
-  let lastValuesRef = useRef<string>("");
+  const lastValuesRef = useRef<string>("");
   useEffect(() => {
     const debouncedValidateAndUpdate = debounce(async () => {
       const currentValues = form.getValues();
