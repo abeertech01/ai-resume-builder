@@ -9,28 +9,30 @@ datasource db {
 }
 
 model User {
-  id      String @id @default(cuid())
-  clerkId String @unique // Clerk user ID from webhook
-  
-  email     String?
+  id String @id @default(cuid())
+
+  email         String    @unique
+  passwordHash  String
+  emailVerified DateTime?
+
   firstName String?
   lastName  String?
   imageUrl  String?
-  
+
   resumes      Resume[]
   subscription UserSubscription?
-  
+  sessions     Session[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
-  @@index([clerkId])
+
   @@map("users")
 }
 
 model Resume {
   id     String @id @default(cuid())
   userId String
-  user   User   @relation(fields: [userId], references: [clerkId], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   title       String?
   description String?
@@ -95,7 +97,7 @@ model Education {
 model UserSubscription {
   id                      String   @id @default(cuid())
   userId                  String   @unique
-  user                    User     @relation(fields: [userId], references: [clerkId], onDelete: Cascade)
+  user                    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   stripeCustomerId        String   @unique
   stripeSubscriptionId    String   @unique
   stripePriceId           String
@@ -106,4 +108,16 @@ model UserSubscription {
   updatedAt DateTime @updatedAt
 
   @@map("user_subscriptions")
+}
+
+model Session {
+  id        String   @id
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("sessions")
 }
