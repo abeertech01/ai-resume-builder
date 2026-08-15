@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, useState } from "react";
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -14,12 +14,10 @@ import { toast } from "sonner";
 import { createCheckoutSession } from "./actions";
 import { env } from "@/env";
 
-interface ComponentProps {}
-
 const premiumFeatures = ["AI tools", "Up to 3 resumes"];
 const premiumPlusFeatures = ["Infinite resumes", "Design Customizations"];
 
-const PremiumModal: FC<ComponentProps> = () => {
+const PremiumModal = () => {
   const { open, setOpen } = usePremiumModal();
 
   const [loading, setLoading] = useState(false);

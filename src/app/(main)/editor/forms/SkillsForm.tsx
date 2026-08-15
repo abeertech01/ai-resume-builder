@@ -26,26 +26,29 @@ export default function SkillsForm({
     },
   });
 
-  let lastValuesRef = useRef({});
+  const lastValuesRef = useRef({});
   useEffect(() => {
-    const debouncedValidateAndUpdate = debounce(async (values) => {
-      const isSame =
-        JSON.stringify(values) === JSON.stringify(lastValuesRef.current);
-      if (isSame) return; // prevent re-triggering for the same values
+    const debouncedValidateAndUpdate = debounce(
+      async (values: { skills?: (string | undefined)[] }) => {
+        const isSame =
+          JSON.stringify(values) === JSON.stringify(lastValuesRef.current);
+        if (isSame) return; // prevent re-triggering for the same values
 
-      const isValid = await form.trigger();
-      if (!isValid) return;
+        const isValid = await form.trigger();
+        if (!isValid) return;
 
-      lastValuesRef.current = values; // update last validated values
-      setResumeData({
-        ...resumeData,
-        skills:
-          values.skills
-            ?.filter((skill: any) => skill !== undefined)
-            .map((skill: any) => skill.trim())
-            .filter((skill: any) => skill !== "") || [],
-      });
-    }, 500);
+        lastValuesRef.current = values; // update last validated values
+        setResumeData({
+          ...resumeData,
+          skills:
+            values.skills
+              ?.filter((skill): skill is string => skill !== undefined)
+              .map((skill) => skill.trim())
+              .filter((skill) => skill !== "") || [],
+        });
+      },
+      500,
+    );
 
     const subscription = form.watch((values) => {
       debouncedValidateAndUpdate(values);

@@ -11,7 +11,7 @@ import { personalInfoSchema, PersonalInfoValues } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
-import { debounce, last, set } from "lodash";
+import { debounce } from "lodash";
 import { EditorFormProps } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 
@@ -43,7 +43,7 @@ export default function PersonalInfoForm({
       : {};
   }
 
-  let lastValuesRef = useRef({});
+  const lastValuesRef = useRef({});
   useEffect(() => {
     const debouncedValidateAndUpdate = debounce(async (values) => {
       const photoFileObj = convertFile2Obj(values.photo as File);
