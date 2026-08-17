@@ -3,8 +3,9 @@ import { cache } from "react";
 import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import type { User } from "@/generated/prisma";
+import { SESSION_COOKIE_NAME } from "./constants";
 
-export const SESSION_COOKIE_NAME = "session";
+export { SESSION_COOKIE_NAME };
 
 const SESSION_DURATION_MS = 1000 * 60 * 60 * 24 * 30; // 30 days
 const SESSION_RENEWAL_WINDOW_MS = 1000 * 60 * 60 * 24 * 15; // renew once under 15 days left
