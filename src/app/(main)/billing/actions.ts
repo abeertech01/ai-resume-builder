@@ -2,31 +2,29 @@
 
 import { env } from "@/env";
 import stripe from "@/lib/stripe";
-import { currentUser } from "@clerk/nextjs/server";
+import { getCurrentSession } from "@/features/auth/session";
 
 export async function createCustomerPortalSession() {
-  const user = await currentUser();
+  const session = await getCurrentSession();
 
-  if (!user) {
+  if (!session) {
     throw new Error("Unauthorized");
   }
 
-  const stripeCustomerId = user.privateMetadata.stripeCustomerId as
-    | string
-    | undefined;
+  const stripeCustomerId = session.user.stripeCustomerId;
 
   if (!stripeCustomerId) {
     throw new Error("Stripe customer ID not found");
   }
 
-  const session = await stripe.billingPortal.sessions.create({
+  const portalSession = await stripe.billingPortal.sessions.create({
     customer: stripeCustomerId,
     return_url: `${env.NEXT_PUBLIC_BASE_URL}/billing`,
   });
 
-  if (!session.url) {
+  if (!portalSession.url) {
     throw new Error("Failed to create billing portal session");
   }
 
-  return session.url;
+  return portalSession.url;
 }

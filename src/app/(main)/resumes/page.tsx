@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { resumeDataInclude } from "@/lib/types";
-import { auth } from "@clerk/nextjs/server";
+import { getCurrentSession } from "@/features/auth/session";
 import { Metadata } from "next";
 import CreateResumeButton from "./CreateResumeButton";
 import ResumeItem from "./ResumeItem";
@@ -12,9 +12,11 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const { userId } = await auth();
+  const session = await getCurrentSession();
 
-  if (!userId) return null;
+  if (!session) return null;
+
+  const userId = session.user.id;
 
   const [resumes, totalCount, subscriptionLevel] = await Promise.all([
     prisma.resume.findMany({

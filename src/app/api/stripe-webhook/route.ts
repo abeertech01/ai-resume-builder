@@ -1,7 +1,6 @@
 import { env } from "@/env";
 import { prisma } from "@/lib/prisma";
 import stripe from "@/lib/stripe";
-import { clerkClient } from "@clerk/nextjs/server";
 import { NextRequest } from "next/server";
 import Stripe from "stripe";
 
@@ -50,12 +49,9 @@ async function handleSessionCompleted(session: Stripe.Checkout.Session) {
     throw new Error("User ID is missing in session metadata");
   }
 
-  await (
-    await clerkClient()
-  ).users.updateUserMetadata(userId, {
-    privateMetadata: {
-      stripeCustomerId: session.customer as string,
-    },
+  await prisma.user.update({
+    where: { id: userId },
+    data: { stripeCustomerId: session.customer as string },
   });
 }
 

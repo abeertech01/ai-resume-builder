@@ -10,7 +10,7 @@ import {
   generateWorkExperienceSchema,
   WorkExperience,
 } from "@/lib/validation";
-import { auth } from "@clerk/nextjs/server";
+import { getCurrentSession } from "@/features/auth/session";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export async function generateSummary(input: GenerateSummaryInput) {
@@ -18,13 +18,13 @@ export async function generateSummary(input: GenerateSummaryInput) {
 
   if (!GEN_API) throw new Error("Gemini API key not found");
 
-  const { userId } = await auth();
+  const session = await getCurrentSession();
 
-  if (!userId) {
+  if (!session) {
     throw new Error("Unauthorized!!");
   }
 
-  const subscriptionLevel = await getUserSubscriptionLevel(userId);
+  const subscriptionLevel = await getUserSubscriptionLevel(session.user.id);
 
   if (!canUseAITools(subscriptionLevel)) {
     throw new Error("Upgrade your subscription to use this feature.");
@@ -93,13 +93,13 @@ export async function generateWorkExperience(
 
   if (!GEN_API) throw new Error("Gemini API key not found");
 
-  const { userId } = await auth();
+  const session = await getCurrentSession();
 
-  if (!userId) {
+  if (!session) {
     throw new Error("Unauthorized!!");
   }
 
-  const subscriptionLevel = await getUserSubscriptionLevel(userId);
+  const subscriptionLevel = await getUserSubscriptionLevel(session.user.id);
 
   if (!canUseAITools(subscriptionLevel)) {
     throw new Error("Upgrade your subscription to use this feature.");
