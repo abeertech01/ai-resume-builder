@@ -20,7 +20,7 @@ export default async function Layout({
   return (
     <SubscriptionLevelProvider userSubscriptionLevel={userSubscriptionLevel}>
       <div className="flex min-h-screen flex-col">
-        <Navbar />
+        <Navbar user={session.user} />
         {children}
         <PremiumModal />
       </div>
