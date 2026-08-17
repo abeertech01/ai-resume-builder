@@ -107,6 +107,22 @@ export type GenerateWorkExperienceInput = z.infer<
   typeof generateWorkExperienceSchema
 >;
 
+export const signUpSchema = z.object({
+  firstName: z.string().trim().min(1, "Required"),
+  lastName: z.string().trim().min(1, "Required"),
+  email: z.string().trim().min(1, "Required").email("Invalid email address"),
+  password: z.string().min(8, "Must be at least 8 characters").max(255),
+});
+
+export type SignUpValues = z.infer<typeof signUpSchema>;
+
+export const logInSchema = z.object({
+  email: z.string().trim().min(1, "Required").email("Invalid email address"),
+  password: z.string().min(1, "Required"),
+});
+
+export type LogInValues = z.infer<typeof logInSchema>;
+
 export const generateSummarySchema = z.object({
   jobTitle: optionalString,
   ...workExperienceSchema.shape,

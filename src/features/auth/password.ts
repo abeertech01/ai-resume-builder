@@ -18,3 +18,11 @@ export function hashPassword(password: string) {
 export function verifyPassword(passwordHash: string, password: string) {
   return verify(passwordHash, password, ARGON2_OPTIONS);
 }
+
+// Computed once per server instance and reused for login attempts against a
+// nonexistent email, so "no such user" and "wrong password" take the same
+// amount of time — otherwise the timing gap would let an attacker enumerate
+// registered emails without ever seeing an error message differ.
+export const dummyPasswordHash = hashPassword(
+  "dummy-password-for-timing-safety",
+);
