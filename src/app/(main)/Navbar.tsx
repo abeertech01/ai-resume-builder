@@ -50,8 +50,8 @@ export default function Navbar({ user }: NavbarProps) {
                 {initials}
               </div>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel className="max-w-48 truncate">
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel className="truncate">
                 {displayName}
               </DropdownMenuLabel>
               <DropdownMenuSeparator />

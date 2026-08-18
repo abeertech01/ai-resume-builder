@@ -100,7 +100,7 @@ function PersonalInfoHeader({ resumeData }: ResumeSectionProps) {
       <div className="space-y-2.5">
         <div className="space-y-1">
           <p className="text-3xl font-bold" style={{ color: colorHex }}>
-            {firstName} {lastName}
+            {[firstName, lastName].filter(Boolean).join(" ")}
           </p>
           <p className="font-medium" style={{ color: colorHex }}>
             {jobTitle}
