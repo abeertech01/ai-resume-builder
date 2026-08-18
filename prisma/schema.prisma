@@ -125,3 +125,15 @@ model Session {
   @@index([userId])
   @@map("sessions")
 }
+
+// One row per attempt at a rate-limited action. `key` scopes the limit -
+// e.g. "login:someone@example.com" or "signup:203.0.113.4" - so different
+// actions and different identities don't share a count.
+model RateLimitAttempt {
+  id        String   @id @default(cuid())
+  key       String
+  createdAt DateTime @default(now())
+
+  @@index([key, createdAt])
+  @@map("rate_limit_attempts")
+}

@@ -10,6 +10,7 @@ import {
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { dummyPasswordHash, hashPassword, verifyPassword } from "./password";
+import { checkRateLimit, getClientIp } from "./rateLimit";
 import {
   clearSessionCookie,
   createSession,
@@ -24,6 +25,16 @@ export async function signUp(
   values: SignUpValues,
 ): Promise<AuthActionResult> {
   const { firstName, lastName, email, password } = signUpSchema.parse(values);
+
+  const ip = await getClientIp();
+  const allowed = await checkRateLimit(`signup:${ip}`, {
+    maxAttempts: 5,
+    windowMs: 60 * 60 * 1000,
+  });
+
+  if (!allowed) {
+    return { error: "Too many signup attempts. Please try again later." };
+  }
 
   const existingUser = await prisma.user.findUnique({
     where: { email },
@@ -48,6 +59,17 @@ export async function signUp(
 
 export async function logIn(values: LogInValues): Promise<AuthActionResult> {
   const { email, password } = logInSchema.parse(values);
+
+  const allowed = await checkRateLimit(`login:${email.toLowerCase()}`, {
+    maxAttempts: 5,
+    windowMs: 5 * 60 * 1000,
+  });
+
+  if (!allowed) {
+    return {
+      error: "Too many login attempts. Please try again in a few minutes.",
+    };
+  }
 
   const user = await prisma.user.findUnique({ where: { email } });
 
