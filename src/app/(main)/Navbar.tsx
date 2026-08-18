@@ -3,14 +3,29 @@
 import Image from "next/image";
 import Link from "next/link";
 import logo from "@/assets/logo.png";
-import { UserButton } from "@clerk/nextjs";
-import { CreditCard } from "lucide-react";
+import { CreditCard, LogOut } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
-import { dark } from "@clerk/themes";
-import { useTheme } from "next-themes";
+import { logOut } from "@/features/auth/actions";
+import type { User } from "@/generated/prisma";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-export default function Navbar() {
-  const { resolvedTheme } = useTheme();
+interface NavbarProps {
+  user: Pick<User, "firstName" | "lastName" | "email">;
+}
+
+export default function Navbar({ user }: NavbarProps) {
+  const displayName =
+    [user.firstName, user.lastName].filter(Boolean).join(" ") || user.email;
+  const initials = (
+    (user.firstName?.[0] ?? user.email[0]) + (user.lastName?.[0] ?? "")
+  ).toUpperCase();
 
   return (
     <header className="shadow-sm">
@@ -29,25 +44,32 @@ export default function Navbar() {
         </Link>
         <div className="flex items-center gap-3">
           <ThemeToggle />
-          <UserButton
-            appearance={{
-              baseTheme: resolvedTheme === "dark" ? dark : undefined,
-              elements: {
-                avatarBox: {
-                  width: 35,
-                  height: 35,
-                },
-              },
-            }}
-          >
-            <UserButton.MenuItems>
-              <UserButton.Link
-                label="Billing"
-                labelIcon={<CreditCard className="size-4" />}
-                href="/billing"
-              />
-            </UserButton.MenuItems>
-          </UserButton>
+          <DropdownMenu>
+            <DropdownMenuTrigger className="focus-visible:ring-ring rounded-full focus-visible:ring-2 focus-visible:outline-none">
+              <div className="bg-primary text-primary-foreground flex size-[35px] items-center justify-center rounded-full text-sm font-medium">
+                {initials}
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel className="truncate">
+                {displayName}
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link href="/billing" className="flex items-center gap-2">
+                  <CreditCard className="size-4" />
+                  Billing
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => logOut()}
+                className="flex items-center gap-2"
+              >
+                <LogOut className="size-4" />
+                Log out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </header>

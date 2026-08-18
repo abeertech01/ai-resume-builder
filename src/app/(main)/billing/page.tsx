@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import stripe from "@/lib/stripe";
-import { auth } from "@clerk/nextjs/server";
+import { getCurrentSession } from "@/features/auth/session";
 import { Metadata } from "next";
 import Stripe from "stripe";
 import GetSubscriptionButton from "./GetSubscriptionButton";
@@ -12,15 +12,15 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const { userId } = await auth();
+  const session = await getCurrentSession();
 
-  if (!userId) {
+  if (!session) {
     return null;
   }
 
   const subscription = await prisma.userSubscription.findUnique({
     where: {
-      userId,
+      userId: session.user.id,
     },
   });
 

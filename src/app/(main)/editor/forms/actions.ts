@@ -10,7 +10,7 @@ import {
   generateWorkExperienceSchema,
   WorkExperience,
 } from "@/lib/validation";
-import { auth } from "@clerk/nextjs/server";
+import { getCurrentSession } from "@/features/auth/session";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export async function generateSummary(input: GenerateSummaryInput) {
@@ -18,13 +18,13 @@ export async function generateSummary(input: GenerateSummaryInput) {
 
   if (!GEN_API) throw new Error("Gemini API key not found");
 
-  const { userId } = await auth();
+  const session = await getCurrentSession();
 
-  if (!userId) {
+  if (!session) {
     throw new Error("Unauthorized!!");
   }
 
-  const subscriptionLevel = await getUserSubscriptionLevel(userId);
+  const subscriptionLevel = await getUserSubscriptionLevel(session.user.id);
 
   if (!canUseAITools(subscriptionLevel)) {
     throw new Error("Upgrade your subscription to use this feature.");
@@ -70,7 +70,7 @@ export async function generateSummary(input: GenerateSummaryInput) {
   try {
     const genAI = new GoogleGenerativeAI(GEN_API);
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash",
+      model: "gemini-3.5-flash-lite",
       systemInstruction: systemMessage,
     });
 
@@ -93,13 +93,13 @@ export async function generateWorkExperience(
 
   if (!GEN_API) throw new Error("Gemini API key not found");
 
-  const { userId } = await auth();
+  const session = await getCurrentSession();
 
-  if (!userId) {
+  if (!session) {
     throw new Error("Unauthorized!!");
   }
 
-  const subscriptionLevel = await getUserSubscriptionLevel(userId);
+  const subscriptionLevel = await getUserSubscriptionLevel(session.user.id);
 
   if (!canUseAITools(subscriptionLevel)) {
     throw new Error("Upgrade your subscription to use this feature.");
@@ -125,7 +125,7 @@ export async function generateWorkExperience(
   try {
     const genAI = new GoogleGenerativeAI(GEN_API);
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash",
+      model: "gemini-3.5-flash-lite",
       systemInstruction: systemMessage,
     });
 

@@ -1,6 +1,6 @@
 import PremiumModal from "@/components/premium/PremiumModal";
 import Navbar from "./Navbar";
-import { auth } from "@clerk/nextjs/server";
+import { getCurrentSession } from "@/features/auth/session";
 import { getUserSubscriptionLevel } from "@/lib/subscription";
 import SubscriptionLevelProvider from "./SubscriptionLevelProvider";
 
@@ -9,16 +9,18 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
-  const { userId } = await auth();
+  const session = await getCurrentSession();
 
-  if (!userId) return null;
+  if (!session) return null;
 
-  const userSubscriptionLevel = await getUserSubscriptionLevel(userId);
+  const userSubscriptionLevel = await getUserSubscriptionLevel(
+    session.user.id,
+  );
 
   return (
     <SubscriptionLevelProvider userSubscriptionLevel={userSubscriptionLevel}>
       <div className="flex min-h-screen flex-col">
-        <Navbar />
+        <Navbar user={session.user} />
         {children}
         <PremiumModal />
       </div>

@@ -23,7 +23,7 @@ Build and download professional resumes instantly using AI.
 - [Tailwind CSS](https://tailwindcss.com/)
 - [Shadcn UI](https://ui.shadcn.com/)
 - [Prisma ORM](https://www.prisma.io/)
-- [Clerk](https://clerk.com/) for authentication
+- Custom email/password authentication (Argon2id password hashing, DB-backed sessions)
 - [Stripe](https://stripe.com/) for payments
 - [Gemini API](https://ai.google.dev/) for AI content generation
 
