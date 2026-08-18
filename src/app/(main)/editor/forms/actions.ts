@@ -70,7 +70,7 @@ export async function generateSummary(input: GenerateSummaryInput) {
   try {
     const genAI = new GoogleGenerativeAI(GEN_API);
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash",
+      model: "gemini-3.5-flash-lite",
       systemInstruction: systemMessage,
     });
 
@@ -125,7 +125,7 @@ export async function generateWorkExperience(
   try {
     const genAI = new GoogleGenerativeAI(GEN_API);
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash",
+      model: "gemini-3.5-flash-lite",
       systemInstruction: systemMessage,
     });
 
