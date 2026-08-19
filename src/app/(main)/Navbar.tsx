@@ -89,7 +89,7 @@ export default function Navbar({ user }: NavbarProps) {
       </div>
       <DeleteAccountDialog
         open={deleteDialogOpen}
-        onOpenChange={setDeleteDialogOpen}
+        onOpenChangeAction={setDeleteDialogOpen}
       />
     </header>
   );

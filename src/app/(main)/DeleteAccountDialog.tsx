@@ -27,12 +27,12 @@ import { useForm } from "react-hook-form";
 
 interface DeleteAccountDialogProps {
   open: boolean;
-  onOpenChange: (open: boolean) => void;
+  onOpenChangeAction: (open: boolean) => void;
 }
 
 export default function DeleteAccountDialog({
   open,
-  onOpenChange,
+  onOpenChangeAction,
 }: DeleteAccountDialogProps) {
   const [isPending, startTransition] = useTransition();
 
@@ -54,7 +54,7 @@ export default function DeleteAccountDialog({
     <Dialog
       open={open}
       onOpenChange={(nextOpen) => {
-        onOpenChange(nextOpen);
+        onOpenChangeAction(nextOpen);
         if (!nextOpen) form.reset();
       }}
     >
@@ -62,9 +62,9 @@ export default function DeleteAccountDialog({
         <DialogHeader>
           <DialogTitle>Delete your account?</DialogTitle>
           <DialogDescription>
-            This permanently deletes your account, all your resumes, and
-            cancels any active subscription. This can&apos;t be undone. Enter
-            your password to confirm.
+            This permanently deletes your account, all your resumes, and cancels
+            any active subscription. This can&apos;t be undone. Enter your
+            password to confirm.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -86,7 +86,7 @@ export default function DeleteAccountDialog({
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => onOpenChange(false)}
+                onClick={() => onOpenChangeAction(false)}
               >
                 Cancel
               </Button>
