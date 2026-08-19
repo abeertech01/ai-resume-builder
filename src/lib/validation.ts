@@ -123,6 +123,12 @@ export const logInSchema = z.object({
 
 export type LogInValues = z.infer<typeof logInSchema>;
 
+export const deleteAccountSchema = z.object({
+  password: z.string().min(1, "Required"),
+});
+
+export type DeleteAccountValues = z.infer<typeof deleteAccountSchema>;
+
 export const generateSummarySchema = z.object({
   jobTitle: optionalString,
   ...workExperienceSchema.shape,
