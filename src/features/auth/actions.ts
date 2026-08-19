@@ -1,6 +1,8 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import stripe from "@/lib/stripe";
+import { del } from "@vercel/blob";
 import {
   logInSchema,
   LogInValues,
@@ -14,6 +16,7 @@ import { checkRateLimit, getClientIp } from "./rateLimit";
 import {
   clearSessionCookie,
   createSession,
+  getCurrentSession,
   invalidateSessionToken,
   SESSION_COOKIE_NAME,
   setSessionCookie,
@@ -91,6 +94,58 @@ export async function logIn(values: LogInValues): Promise<AuthActionResult> {
 export async function logOut() {
   const token = (await cookies()).get(SESSION_COOKIE_NAME)?.value;
   if (token) await invalidateSessionToken(token);
+  await clearSessionCookie();
+  redirect("/");
+}
+
+export async function deleteAccount(
+  password: string,
+): Promise<AuthActionResult> {
+  const session = await getCurrentSession();
+
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+
+  const validPassword = await verifyPassword(
+    session.user.passwordHash,
+    password,
+  );
+
+  if (!validPassword) {
+    return { error: "Incorrect password." };
+  }
+
+  const subscription = await prisma.userSubscription.findUnique({
+    where: { userId: session.user.id },
+  });
+
+  // Cancel any active Stripe subscription first, so deleting the account
+  // doesn't leave them being billed for a plan tied to a user that no
+  // longer exists.
+  if (subscription) {
+    await stripe.subscriptions
+      .cancel(subscription.stripeSubscriptionId)
+      .catch(() => {});
+  }
+
+  // DB cascade deletes (below) don't touch external Blob storage, so any
+  // uploaded resume photos need to be removed explicitly.
+  const resumes = await prisma.resume.findMany({
+    where: { userId: session.user.id },
+    select: { photoUrl: true },
+  });
+
+  await Promise.all(
+    resumes
+      .filter((resume) => resume.photoUrl)
+      .map((resume) => del(resume.photoUrl!).catch(() => {})),
+  );
+
+  // Cascades to Resume (and its WorkExperience/Education), UserSubscription,
+  // and Session via onDelete: Cascade in the schema.
+  await prisma.user.delete({ where: { id: session.user.id } });
+
   await clearSessionCookie();
   redirect("/");
 }
