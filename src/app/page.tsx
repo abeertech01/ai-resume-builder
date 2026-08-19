@@ -2,8 +2,16 @@ import Image from "next/image";
 import logo from "@/assets/logo.png";
 import resumePreview from "@/assets/resume-preview.jpg";
 import GetStartedBtn from "./components/GetStartedBtn";
+import { getCurrentSession } from "@/features/auth/session";
+import { redirect } from "next/navigation";
 
 export default async function Home() {
+  const session = await getCurrentSession();
+
+  if (session) {
+    redirect("/resumes");
+  }
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-gray-100 px-5 py-12 text-center text-gray-900 md:flex-row md:text-start lg:gap-12">
       <div className="max-w-prose space-y-3">

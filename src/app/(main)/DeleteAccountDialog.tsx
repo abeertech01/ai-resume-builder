@@ -9,7 +9,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -23,11 +22,18 @@ import { Input } from "@/components/ui/input";
 import { deleteAccount } from "@/features/auth/actions";
 import { deleteAccountSchema, DeleteAccountValues } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useTransition } from "react";
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 
-export default function DeleteAccountButton() {
-  const [open, setOpen] = useState(false);
+interface DeleteAccountDialogProps {
+  open: boolean;
+  onOpenChangeAction: (open: boolean) => void;
+}
+
+export default function DeleteAccountDialog({
+  open,
+  onOpenChangeAction,
+}: DeleteAccountDialogProps) {
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<DeleteAccountValues>({
@@ -48,20 +54,17 @@ export default function DeleteAccountButton() {
     <Dialog
       open={open}
       onOpenChange={(nextOpen) => {
-        setOpen(nextOpen);
+        onOpenChangeAction(nextOpen);
         if (!nextOpen) form.reset();
       }}
     >
-      <DialogTrigger asChild>
-        <Button variant="destructive">Delete account</Button>
-      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Delete your account?</DialogTitle>
           <DialogDescription>
-            This permanently deletes your account, all your resumes, and
-            cancels any active subscription. This can&apos;t be undone. Enter
-            your password to confirm.
+            This permanently deletes your account, all your resumes, and cancels
+            any active subscription. This can&apos;t be undone. Enter your
+            password to confirm.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -83,7 +86,7 @@ export default function DeleteAccountButton() {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => setOpen(false)}
+                onClick={() => onOpenChangeAction(false)}
               >
                 Cancel
               </Button>
