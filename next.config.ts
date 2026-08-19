@@ -6,6 +6,13 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "4mb",
     },
   },
+  // Prisma's generator output lives outside node_modules (src/generated/prisma),
+  // so Next's default file tracing doesn't know to bundle the query engine
+  // binary into serverless functions - without this, Vercel can't find it at
+  // runtime even though it built fine locally.
+  outputFileTracingIncludes: {
+    "/*": ["./src/generated/prisma/**/*"],
+  },
   images: {
     remotePatterns: [
       {
