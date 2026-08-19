@@ -14,6 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { debounce } from "lodash";
 import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
+import useLatest from "@/hooks/useLatest";
 
 export default function SkillsForm({
   resumeData,
@@ -26,6 +27,7 @@ export default function SkillsForm({
     },
   });
 
+  const resumeDataRef = useLatest(resumeData);
   const lastValuesRef = useRef({});
   useEffect(() => {
     const debouncedValidateAndUpdate = debounce(
@@ -39,7 +41,7 @@ export default function SkillsForm({
 
         lastValuesRef.current = values; // update last validated values
         setResumeData({
-          ...resumeData,
+          ...resumeDataRef.current,
           skills:
             values.skills
               ?.filter((skill): skill is string => skill !== undefined)
@@ -58,7 +60,7 @@ export default function SkillsForm({
       subscription.unsubscribe();
       debouncedValidateAndUpdate.cancel();
     };
-  }, [form, setResumeData]);
+  }, [form, setResumeData, resumeDataRef]);
 
   return (
     <div className="mx-auto max-w-xl space-y-6">

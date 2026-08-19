@@ -14,6 +14,7 @@ import { debounce } from "lodash";
 import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import GenerateSummaryButton from "./GenerateSummaryButton";
+import useLatest from "@/hooks/useLatest";
 
 export default function SummaryForm({
   resumeData,
@@ -26,6 +27,7 @@ export default function SummaryForm({
     },
   });
 
+  const resumeDataRef = useLatest(resumeData);
   const lastValuesRef = useRef({});
   useEffect(() => {
     const debouncedValidateAndUpdate = debounce(async (values) => {
@@ -37,7 +39,7 @@ export default function SummaryForm({
       if (!isValid) return;
 
       lastValuesRef.current = values; // update last validated values
-      setResumeData({ ...resumeData, ...values });
+      setResumeData({ ...resumeDataRef.current, ...values });
     }, 500);
 
     const subscription = form.watch((values) => {
@@ -48,7 +50,7 @@ export default function SummaryForm({
       subscription.unsubscribe();
       debouncedValidateAndUpdate.cancel();
     };
-  }, [form, setResumeData]);
+  }, [form, setResumeData, resumeDataRef]);
 
   return (
     <div className="mx-auto max-w-xl space-y-6">

@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { EditorFormProps } from "@/lib/types";
 import { useEffect, useRef } from "react";
 import { debounce } from "lodash";
+import useLatest from "@/hooks/useLatest";
 
 export default function GeneralInfoForm({
   resumeData,
@@ -27,6 +28,7 @@ export default function GeneralInfoForm({
     },
   });
 
+  const resumeDataRef = useLatest(resumeData);
   const lastValuesRef = useRef({});
   useEffect(() => {
     const debouncedValidateAndUpdate = debounce(async (values) => {
@@ -38,7 +40,7 @@ export default function GeneralInfoForm({
       if (!isValid) return;
 
       lastValuesRef.current = values; // update last validated values
-      setResumeData({ ...resumeData, ...values });
+      setResumeData({ ...resumeDataRef.current, ...values });
     }, 500);
 
     const subscription = form.watch((values) => {
@@ -49,7 +51,7 @@ export default function GeneralInfoForm({
       subscription.unsubscribe();
       debouncedValidateAndUpdate.cancel();
     };
-  }, [form, setResumeData]);
+  }, [form, setResumeData, resumeDataRef]);
 
   return (
     <div className="mx-auto max-w-xl space-y-6">
