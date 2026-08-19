@@ -3,10 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import logo from "@/assets/logo.png";
-import { CreditCard, LogOut } from "lucide-react";
+import { CreditCard, LogOut, Trash2 } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
 import { logOut } from "@/features/auth/actions";
 import type { User } from "@/generated/prisma";
+import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,12 +16,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import DeleteAccountDialog from "./DeleteAccountDialog";
 
 interface NavbarProps {
   user: Pick<User, "firstName" | "lastName" | "email">;
 }
 
 export default function Navbar({ user }: NavbarProps) {
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
   const displayName =
     [user.firstName, user.lastName].filter(Boolean).join(" ") || user.email;
   const initials = (
@@ -62,6 +66,17 @@ export default function Navbar({ user }: NavbarProps) {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem
+                variant="destructive"
+                onSelect={(e) => {
+                  e.preventDefault();
+                  setDeleteDialogOpen(true);
+                }}
+                className="flex items-center gap-2"
+              >
+                <Trash2 className="size-4" />
+                Delete account
+              </DropdownMenuItem>
+              <DropdownMenuItem
                 onClick={() => logOut()}
                 className="flex items-center gap-2"
               >
@@ -72,6 +87,10 @@ export default function Navbar({ user }: NavbarProps) {
           </DropdownMenu>
         </div>
       </div>
+      <DeleteAccountDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+      />
     </header>
   );
 }

@@ -6,7 +6,6 @@ import Stripe from "stripe";
 import GetSubscriptionButton from "./GetSubscriptionButton";
 import { formatDate } from "date-fns";
 import ManageSubscriptionButton from "./ManageSubscriptionButton";
-import DeleteAccountButton from "./DeleteAccountButton";
 
 export const metadata: Metadata = {
   title: "Billing",
@@ -53,15 +52,6 @@ export default async function Page() {
       ) : (
         <GetSubscriptionButton />
       )}
-      <div className="space-y-3 border-t pt-6">
-        <div>
-          <h2 className="text-lg font-semibold">Danger zone</h2>
-          <p className="text-muted-foreground text-sm">
-            Permanently delete your account and all your resumes.
-          </p>
-        </div>
-        <DeleteAccountButton />
-      </div>
     </main>
   );
 }
