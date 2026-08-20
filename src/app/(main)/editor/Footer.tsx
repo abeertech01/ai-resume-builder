@@ -40,23 +40,35 @@ export default function Footer({
           >
             Previous step
           </Button>
-          <Button
-            onClick={nextStep ? () => setCurrentStep(nextStep) : undefined}
-            disabled={!nextStep}
-          >
-            Next step
-          </Button>
+          {nextStep ? (
+            <Button onClick={() => setCurrentStep(nextStep)}>
+              Next step
+            </Button>
+          ) : (
+            <Button asChild>
+              <Link href={"/resumes"}>Complete</Link>
+            </Button>
+          )}
         </div>
         <Button
           variant={"outline"}
-          size={"icon"}
           onClick={() => setShowSmResumePreview(!showSmResumePreview)}
-          className="md:hidden"
+          className="flex items-center gap-2 md:hidden"
           title={
             showSmResumePreview ? "Show input form" : "Show resume preview"
           }
         >
-          {showSmResumePreview ? <PenLineIcon /> : <FileUserIcon />}
+          {showSmResumePreview ? (
+            <>
+              <PenLineIcon className="size-4" />
+              Edit
+            </>
+          ) : (
+            <>
+              <FileUserIcon className="size-4" />
+              Preview
+            </>
+          )}
         </Button>
         <div className="flex items-center gap-3">
           <Button variant={"secondary"} asChild>

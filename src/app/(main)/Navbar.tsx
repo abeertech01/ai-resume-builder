@@ -55,8 +55,13 @@ export default function Navbar({ user }: NavbarProps) {
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel className="truncate">
-                {displayName}
+              <DropdownMenuLabel className="flex flex-col truncate">
+                <span className="truncate">{displayName}</span>
+                {displayName !== user.email && (
+                  <span className="text-muted-foreground truncate text-xs font-normal">
+                    {user.email}
+                  </span>
+                )}
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
