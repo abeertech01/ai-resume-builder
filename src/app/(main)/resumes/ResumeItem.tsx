@@ -11,7 +11,7 @@ import {
 import { ResumeServerData } from "@/lib/types";
 import { mapToResumeValues } from "@/lib/utils";
 import { formatDate } from "date-fns";
-import { MoreVertical, Printer, Trash2 } from "lucide-react";
+import { Download, MoreVertical, Printer, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { FC, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -48,7 +48,7 @@ const ResumeItem: FC<ComponentProps> = ({ resume }) => {
           href={`/editor?resumeId=${resume.id}`}
           className="inline-block w-full text-center"
         >
-          <p className="line-clamp-1 font-semibold">
+          <p className="line-clamp-1 px-9 font-semibold">
             {resume.title || "Untitled"}
           </p>
           {resume.description && (
@@ -71,6 +71,15 @@ const ResumeItem: FC<ComponentProps> = ({ resume }) => {
           <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white to-transparent" />
         </Link>
       </div>
+      <Button
+        variant={"ghost"}
+        size={"icon"}
+        title="Download as PDF"
+        className="absolute top-0.5 left-0.5"
+        onClick={() => reactToPrintFn()}
+      >
+        <Download className="size-4" />
+      </Button>
       <MoreMenu resumeId={resume.id} onPrintClick={reactToPrintFn} />
     </div>
   );
@@ -91,7 +100,7 @@ function MoreMenu({ resumeId, onPrintClick }: MoreMenuProps) {
           <Button
             variant={"ghost"}
             size={"icon"}
-            className="absolute top-0.5 right-0.5 opacity-0 transition-opacity group-hover:opacity-100"
+            className="absolute top-0.5 right-0.5"
           >
             <MoreVertical className="size-4" />
           </Button>
