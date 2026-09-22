@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { resumeDataInclude } from "@/lib/types";
 import { getCurrentSession } from "@/features/auth/session";
 import { Metadata } from "next";
+import { redirect } from "next/navigation";
 import CreateResumeButton from "./CreateResumeButton";
 import ResumeItem from "./ResumeItem";
 import { getUserSubscriptionLevel } from "@/lib/subscription";
@@ -14,7 +15,9 @@ export const metadata: Metadata = {
 export default async function Page() {
   const session = await getCurrentSession();
 
-  if (!session) return null;
+  // The (main) layout no longer gates this centrally, since it allows
+  // anonymous access to /editor — this page still requires an account.
+  if (!session) redirect("/sign-in");
 
   const userId = session.user.id;
 

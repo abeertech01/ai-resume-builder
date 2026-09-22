@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import stripe from "@/lib/stripe";
 import { getCurrentSession } from "@/features/auth/session";
 import { Metadata } from "next";
+import { redirect } from "next/navigation";
 import Stripe from "stripe";
 import GetSubscriptionButton from "./GetSubscriptionButton";
 import { formatDate } from "date-fns";
@@ -14,8 +15,10 @@ export const metadata: Metadata = {
 export default async function Page() {
   const session = await getCurrentSession();
 
+  // The (main) layout no longer gates this centrally, since it allows
+  // anonymous access to /editor — this page still requires an account.
   if (!session) {
-    return null;
+    redirect("/sign-in");
   }
 
   const subscription = await prisma.userSubscription.findUnique({

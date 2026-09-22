@@ -11,16 +11,19 @@ export default async function Layout({
 }) {
   const session = await getCurrentSession();
 
-  if (!session) return null;
-
-  const userSubscriptionLevel = await getUserSubscriptionLevel(
-    session.user.id,
-  );
+  // Anonymous visitors reach this layout only via /editor (see
+  // middleware.ts's publicRoutes) to use their free-tier resume, stored
+  // in the browser rather than the DB. Every other route under (main)
+  // still requires a session and redirects for itself — this layout no
+  // longer enforces that centrally.
+  const userSubscriptionLevel = session
+    ? await getUserSubscriptionLevel(session.user.id)
+    : "free";
 
   return (
     <SubscriptionLevelProvider userSubscriptionLevel={userSubscriptionLevel}>
       <div className="flex min-h-screen flex-col">
-        <Navbar user={session.user} />
+        <Navbar user={session?.user ?? null} />
         {children}
         <PremiumModal />
       </div>
