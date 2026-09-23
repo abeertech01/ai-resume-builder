@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import ResumeEditor from "./ResumeEditor";
+import AnonymousResumeEditor from "./AnonymousResumeEditor";
 import { getCurrentSession } from "@/features/auth/session";
 import { prisma } from "@/lib/prisma";
 import { resumeDataInclude } from "@/lib/types";
@@ -17,7 +18,7 @@ export default async function Page({ searchParams }: PageProps) {
 
   const session = await getCurrentSession();
 
-  if (!session) return null;
+  if (!session) return <AnonymousResumeEditor />;
 
   const resumeToEdit = resumeId
     ? await prisma.resume.findUnique({

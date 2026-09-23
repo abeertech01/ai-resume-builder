@@ -7,6 +7,9 @@ const publicRoutes = [
   "/sign-in",
   "/sign-up",
   "/api/stripe-webhook",
+  // Anonymous visitors can build one free-tier resume, stored in their
+  // browser, without an account — see PLAN-anonymous-resume.md.
+  "/editor",
 ];
 
 function isPublicRoute(pathname: string) {
