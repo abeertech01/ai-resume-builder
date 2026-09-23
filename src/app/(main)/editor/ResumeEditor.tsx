@@ -24,6 +24,7 @@ export default function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
       setResumeData={setResumeData}
       isSaving={isSaving}
       hasUnsavedChanges={hasUnsavedChanges}
+      isAnonymous={false}
     />
   );
 }

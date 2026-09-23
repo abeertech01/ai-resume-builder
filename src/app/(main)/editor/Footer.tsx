@@ -10,6 +10,7 @@ interface FooterProps {
   showSmResumePreview: boolean;
   setShowSmResumePreview: (show: boolean) => void;
   isSaving: boolean;
+  isAnonymous: boolean;
 }
 
 export default function Footer({
@@ -18,6 +19,7 @@ export default function Footer({
   showSmResumePreview,
   setShowSmResumePreview,
   isSaving,
+  isAnonymous,
 }: FooterProps) {
   const previousStep = steps.find(
     (_, index) => steps[index + 1]?.key === currentStep,
@@ -41,12 +43,12 @@ export default function Footer({
             Previous step
           </Button>
           {nextStep ? (
-            <Button onClick={() => setCurrentStep(nextStep)}>
-              Next step
-            </Button>
+            <Button onClick={() => setCurrentStep(nextStep)}>Next step</Button>
           ) : (
             <Button asChild>
-              <Link href={"/resumes"}>Complete</Link>
+              <Link href={isAnonymous ? "/sign-up?from=editor" : "/resumes"}>
+                Complete
+              </Link>
             </Button>
           )}
         </div>
@@ -72,7 +74,7 @@ export default function Footer({
         </Button>
         <div className="flex items-center gap-3">
           <Button variant={"secondary"} asChild>
-            <Link href={"/resumes"}>Close</Link>
+            <Link href={isAnonymous ? "/" : "/resumes"}>Close</Link>
           </Button>
           <p
             className={cn(

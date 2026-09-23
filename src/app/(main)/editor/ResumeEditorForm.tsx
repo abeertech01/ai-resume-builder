@@ -15,6 +15,7 @@ interface ResumeEditorFormProps {
   setResumeData: Dispatch<SetStateAction<ResumeValues>>;
   isSaving: boolean;
   hasUnsavedChanges: boolean;
+  isAnonymous: boolean;
 }
 
 export default function ResumeEditorForm({
@@ -22,6 +23,7 @@ export default function ResumeEditorForm({
   setResumeData,
   isSaving,
   hasUnsavedChanges,
+  isAnonymous,
 }: ResumeEditorFormProps) {
   const searchParams = useSearchParams();
 
@@ -80,6 +82,7 @@ export default function ResumeEditorForm({
         showSmResumePreview={showSmResumePreview}
         setShowSmResumePreview={setShowSmResumePreview}
         isSaving={isSaving}
+        isAnonymous={isAnonymous}
       />
     </div>
   );

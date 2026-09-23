@@ -22,7 +22,7 @@ export default function GetStartedBtn() {
       });
     }
 
-    router.push("/resumes");
+    router.push("/editor");
   };
 
   return (

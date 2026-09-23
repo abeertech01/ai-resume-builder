@@ -1,9 +1,15 @@
 import SignUpForm from "./SignUpForm";
 
-export default function Page() {
+interface PageProps {
+  searchParams: Promise<{ from?: string }>;
+}
+
+export default async function Page({ searchParams }: PageProps) {
+  const { from } = await searchParams;
+
   return (
     <main className="flex h-screen items-center justify-center p-3">
-      <SignUpForm />
+      <SignUpForm fromEditor={from === "editor"} />
     </main>
   );
 }

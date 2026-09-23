@@ -17,7 +17,11 @@ import Link from "next/link";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
-export default function SignUpForm() {
+interface SignUpFormProps {
+  fromEditor?: boolean;
+}
+
+export default function SignUpForm({ fromEditor }: SignUpFormProps) {
   const [error, setError] = useState<string>();
   const [isPending, startTransition] = useTransition();
 
@@ -44,7 +48,9 @@ export default function SignUpForm() {
       <div className="space-y-1.5 text-center">
         <h1 className="text-2xl font-semibold">Create an account</h1>
         <p className="text-muted-foreground text-sm">
-          Start building your resume for free
+          {fromEditor
+            ? "Sign up to save your resume — it's already built and will be added to your account automatically."
+            : "Start building your resume for free"}
         </p>
       </div>
       <Form {...form}>
