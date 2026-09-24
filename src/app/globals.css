@@ -137,3 +137,39 @@
   size: A4;
   margin: 0.6cm;
 }
+
+/* Landing page hero motif (see HeroMotif.tsx). Each floating card sets its
+   own drift distance/timing through the --drift-* custom properties. */
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(var(--drift-x, 0px), var(--drift-y, -8px), 0);
+  }
+}
+
+.animate-drift {
+  animation: drift var(--drift-duration, 6s) ease-in-out var(--drift-delay, 0s)
+    infinite;
+}
+
+/* Only the start state is keyframed: the ring's resting stroke-dashoffset
+   (the score) is set on the element itself. */
+@keyframes gauge-fill {
+  from {
+    stroke-dashoffset: var(--ring-c);
+  }
+}
+
+.gauge-ring {
+  animation: gauge-fill 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-drift,
+  .gauge-ring {
+    animation: none;
+  }
+}

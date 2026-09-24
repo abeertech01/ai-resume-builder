@@ -1,7 +1,7 @@
 import Image from "next/image";
 import logo from "@/assets/logo.png";
-import resumePreview from "@/assets/resume-preview.jpg";
 import GetStartedBtn from "./components/GetStartedBtn";
+import HeroMotif from "./components/HeroMotif";
 import ThemeToggle from "@/components/ThemeToggle";
 import { getCurrentSession } from "@/features/auth/session";
 import { redirect } from "next/navigation";
@@ -43,14 +43,7 @@ export default async function Home() {
         </p>
         <GetStartedBtn />
       </div>
-      <div>
-        <Image
-          src={resumePreview}
-          alt="Resume Preview"
-          width={600}
-          className="shadow-md lg:rotate-[2deg]"
-        />
-      </div>
+      <HeroMotif />
     </main>
   );
 }
