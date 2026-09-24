@@ -8,6 +8,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 import { logOut } from "@/features/auth/actions";
 import type { User } from "@/generated/prisma";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -48,7 +49,7 @@ export default function Navbar({ user }: NavbarProps) {
             height={35}
             className="rounded-full"
           />
-          <span className="text-xl font-bold tracking-tight">
+          <span className="font-heading text-xl font-bold tracking-tight">
             AI Resume Builder
           </span>
         </Link>
@@ -102,12 +103,9 @@ export default function Navbar({ user }: NavbarProps) {
               <Link href="/sign-in" className="text-sm font-medium">
                 Sign in
               </Link>
-              <Link
-                href="/sign-up"
-                className="bg-primary text-primary-foreground rounded-md px-3 py-1.5 text-sm font-medium"
-              >
-                Sign up
-              </Link>
+              <Button asChild variant="premium" size="sm">
+                <Link href="/sign-up">Sign up</Link>
+              </Button>
             </div>
           )}
         </div>

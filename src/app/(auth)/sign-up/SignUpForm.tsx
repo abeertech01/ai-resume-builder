@@ -46,7 +46,9 @@ export default function SignUpForm({ fromEditor }: SignUpFormProps) {
   return (
     <div className="w-full max-w-md space-y-6">
       <div className="space-y-1.5 text-center">
-        <h1 className="text-2xl font-semibold">Create an account</h1>
+        <h1 className="font-heading text-2xl font-semibold">
+          Create an account
+        </h1>
         <p className="text-muted-foreground text-sm">
           {fromEditor
             ? "Sign up to save your resume — it's already built and will be added to your account automatically."

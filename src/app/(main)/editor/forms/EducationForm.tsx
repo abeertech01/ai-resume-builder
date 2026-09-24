@@ -104,7 +104,7 @@ export default function EducationForm({
   return (
     <div className="mx-auto max-w-xl space-y-6">
       <div className="space-y-1.5 text-center">
-        <h2 className="text-2xl font-semibold">Education</h2>
+        <h2 className="font-heading text-2xl font-semibold">Education</h2>
         <p className="text-muted-foreground text-sm">
           Add as many educations as you like
         </p>
