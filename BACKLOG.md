@@ -21,3 +21,5 @@
       3. ✅ a skill-chip row
       4. ✅ a "Downloaded PDF ✓" toast.
       5. ✅ Add a mouse-follow 3D tilt so it reacts to the cursor.
+8. ✅ Make the "Complete" button green, the shade suites the most.
+9. ✅ Add Signup and login buttons right after in the right side of 'Get Started' button.

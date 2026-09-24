@@ -47,7 +47,10 @@ export default function Footer({
               Next step
             </Button>
           ) : (
-            <Button asChild>
+            <Button
+              asChild
+              className="bg-emerald-600 text-white shadow-xs hover:bg-emerald-700 dark:hover:bg-emerald-500"
+            >
               <Link href={isAnonymous ? "/sign-up?from=editor" : "/resumes"}>
                 Complete
               </Link>

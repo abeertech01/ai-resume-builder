@@ -26,8 +26,13 @@ export default function GetStartedBtn() {
   };
 
   return (
-    <Button size={"lg"} variant={"premium"} onClick={getStartedBtn}>
-      Get started
+    <Button
+      size={"lg"}
+      variant={"premium"}
+      onClick={getStartedBtn}
+      className="h-12 px-6 text-base"
+    >
+      Get started, it&apos;s free
     </Button>
   );
 }
