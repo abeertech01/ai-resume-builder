@@ -15,7 +15,7 @@ const CreateResumeButton: FC<ComponentProps> = ({ canCreate }) => {
 
   if (canCreate) {
     return (
-      <Button asChild className="mx-auto flex w-fit gap-2">
+      <Button asChild variant="premium" className="mx-auto flex w-fit gap-2">
         <Link href={"/editor"}>
           <PlusSquare className="size-5" />
           New resume
@@ -26,6 +26,7 @@ const CreateResumeButton: FC<ComponentProps> = ({ canCreate }) => {
 
   return (
     <Button
+      variant="premium"
       onClick={() => premiumModal.setOpen(true)}
       className="mx-auto flex w-fit gap-2"
     >

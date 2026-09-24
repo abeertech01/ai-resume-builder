@@ -43,7 +43,9 @@ export default function Footer({
             Previous step
           </Button>
           {nextStep ? (
-            <Button onClick={() => setCurrentStep(nextStep)}>Next step</Button>
+            <Button variant="premium" onClick={() => setCurrentStep(nextStep)}>
+              Next step
+            </Button>
           ) : (
             <Button asChild>
               <Link href={isAnonymous ? "/sign-up?from=editor" : "/resumes"}>
@@ -73,7 +75,10 @@ export default function Footer({
           )}
         </Button>
         <div className="flex items-center gap-3">
-          <Button variant={"secondary"} asChild>
+          <Button
+            asChild
+            className="bg-rose-500 text-white shadow-xs hover:bg-rose-600 dark:bg-rose-600 dark:hover:bg-rose-500"
+          >
             <Link href={isAnonymous ? "/" : "/resumes"}>Close</Link>
           </Button>
           <p

@@ -51,7 +51,7 @@ export default async function Page() {
       />
       <CreateResumeButton canCreate={canCreate} />
       <div className="space-y-1">
-        <h1 className="text-3xl font-bold">Your Resumes</h1>
+        <h1 className="font-heading text-3xl font-bold">Your Resumes</h1>
         <p>Total: {totalCount}</p>
       </div>
       <div className="flex w-full grid-cols-2 flex-col gap-3 sm:grid md:grid-cols-3 lg:grid-cols-4">

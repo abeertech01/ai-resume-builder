@@ -56,7 +56,7 @@ export default function GeneralInfoForm({
   return (
     <div className="mx-auto max-w-xl space-y-6">
       <div className="space-y-1.5 text-center">
-        <h2 className="text-2xl font-semibold">General info</h2>
+        <h2 className="font-heading text-2xl font-semibold">General info</h2>
         <p className="text-muted-foreground text-sm">
           This will not appear on your resume
         </p>
