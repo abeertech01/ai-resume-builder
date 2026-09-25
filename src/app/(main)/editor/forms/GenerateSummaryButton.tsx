@@ -25,7 +25,7 @@ const GenerateSummaryButton: FC<ComponentProps> = ({
 
   async function handleClick() {
     if (!canUseAITools(subscriptionLevel)) {
-      premiumModal.setOpen(true);
+      premiumModal.openFor("pro");
       return;
     }
 

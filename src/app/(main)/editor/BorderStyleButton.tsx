@@ -25,7 +25,7 @@ const BorderStyleButton: FC<ComponentProps> = ({ borderStyle, onChange }) => {
 
   function handleClick() {
     if (!canUseCustomizations(subscriptionLevel)) {
-      premiumModal.setOpen(true);
+      premiumModal.openFor("pro_plus");
       return;
     }
 

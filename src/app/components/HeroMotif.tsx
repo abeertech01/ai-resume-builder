@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Check } from "lucide-react";
 import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
-import resumePreview from "@/assets/resume-preview.jpg";
+import resumePreview from "@/assets/ai-resume-preview.jpg";
 import { cn } from "@/lib/utils";
 
 const MAX_TILT_DEG = 9;
@@ -121,7 +121,7 @@ export default function HeroMotif() {
           className="relative h-full w-full transition-transform duration-200 ease-out will-change-transform [transform-style:preserve-3d] motion-reduce:transition-none"
         >
           {/* The resume: upright, small, rounded. */}
-          <div className="absolute top-[30px] left-[30px] w-[250px] overflow-hidden rounded-2xl shadow-2xl ring-1 shadow-black/20 ring-black/5 dark:shadow-black/60 dark:ring-white/10">
+          <div className="absolute top-[30px] left-[30px] w-[250px] overflow-hidden rounded-lg shadow-2xl ring-1 shadow-black/20 ring-black/5 dark:shadow-black/60 dark:ring-white/10">
             <Image
               src={resumePreview}
               alt="Resume preview"
@@ -129,25 +129,25 @@ export default function HeroMotif() {
               sizes="340px"
               className="block h-auto w-full"
             />
-            {/* Highlights the "Recognized as the best employee…" bullet
-                (51% down the page) that the AI tag points at. */}
+            {/* Highlights the "Developed SME software solutions…" bullet
+                (56% down the page) that the AI tag points at. */}
             <span
               aria-hidden
               className="absolute rounded-sm bg-sky-400/25 ring-1 ring-sky-500/60"
               style={{
                 left: "2.2%",
-                top: "50.4%",
-                width: "65%",
+                top: "55.4%",
+                width: "67%",
                 height: "1.7%",
               }}
             />
             <span
               aria-hidden
               className="absolute size-2 -translate-x-1/2 -translate-y-1/2"
-              style={{ left: "67.2%", top: "51.2%" }}
+              style={{ left: "69.3%", top: "56.3%" }}
             >
               <span className="absolute inline-flex size-full animate-ping rounded-full bg-sky-400 opacity-75 motion-reduce:animate-none" />
-              <span className="relative inline-flex size-2 rounded-full bg-sky-500" />
+              <span className="relative block size-2 rounded-full bg-sky-500" />
             </span>
           </div>
 
@@ -193,7 +193,7 @@ export default function HeroMotif() {
           </Floating>
 
           <Floating
-            className="top-[198px] left-[210px]"
+            className="top-[216px] left-[215px]"
             depth={50}
             drift={{ x: 4, duration: 6, delay: -3 }}
           >

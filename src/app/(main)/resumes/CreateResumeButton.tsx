@@ -5,12 +5,15 @@ import usePremiumModal from "@/hooks/usePremiumModal";
 import { PlusSquare } from "lucide-react";
 import Link from "next/link";
 import { FC } from "react";
+import { useSubscriptionLevel } from "../SubscriptionLevelProvider";
 
 interface ComponentProps {
   canCreate: boolean;
 }
 
 const CreateResumeButton: FC<ComponentProps> = ({ canCreate }) => {
+  const subscriptionLevel = useSubscriptionLevel();
+
   const premiumModal = usePremiumModal();
 
   if (canCreate) {
@@ -27,7 +30,11 @@ const CreateResumeButton: FC<ComponentProps> = ({ canCreate }) => {
   return (
     <Button
       variant="premium"
-      onClick={() => premiumModal.setOpen(true)}
+      // A free user (limit 1) can fix this with either paid plan; a Premium
+      // user (limit 3) only with Premium Plus, which has no limit.
+      onClick={() =>
+        premiumModal.openFor(subscriptionLevel === "pro" ? "pro_plus" : "pro")
+      }
       className="mx-auto flex w-fit gap-2"
     >
       <PlusSquare className="size-5" />
