@@ -24,9 +24,7 @@ import {
 
 export type AuthActionResult = { error: string };
 
-export async function signUp(
-  values: SignUpValues,
-): Promise<AuthActionResult> {
+export async function signUp(values: SignUpValues): Promise<AuthActionResult> {
   const { firstName, lastName, email, password } = signUpSchema.parse(values);
 
   const ip = await getClientIp();
@@ -120,13 +118,36 @@ export async function deleteAccount(
     where: { userId: session.user.id },
   });
 
-  // Cancel any active Stripe subscription first, so deleting the account
-  // doesn't leave them being billed for a plan tied to a user that no
-  // longer exists.
-  if (subscription) {
-    await stripe.subscriptions
-      .cancel(subscription.stripeSubscriptionId)
-      .catch(() => {});
+  // Cancel every live Stripe subscription on this customer first, so deleting
+  // the account doesn't leave them being billed for a plan tied to a user that
+  // no longer exists. They're listed from Stripe rather than taken from the one
+  // subscription we have recorded, so a duplicate can't slip through.
+  const stripeCustomerId =
+    subscription?.stripeCustomerId ?? session.user.stripeCustomerId;
+
+  if (stripeCustomerId) {
+    try {
+      const { data: liveSubscriptions } = await stripe.subscriptions.list({
+        customer: stripeCustomerId,
+      });
+
+      const results = await Promise.allSettled(
+        liveSubscriptions.map(({ id }) => stripe.subscriptions.cancel(id)),
+      );
+
+      results.forEach((result) => {
+        if (result.status === "rejected") {
+          console.error(
+            "Failed to cancel a Stripe subscription",
+            result.reason,
+          );
+        }
+      });
+    } catch (error) {
+      // Best effort, as before: a Stripe hiccup shouldn't stop the account
+      // from being deleted. It's logged so it isn't silent.
+      console.error("Failed to list Stripe subscriptions", error);
+    }
   }
 
   // DB cascade deletes (below) don't touch external Blob storage, so any

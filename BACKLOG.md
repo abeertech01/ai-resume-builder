@@ -25,8 +25,8 @@
 
 ## Existing Problems
 
-1. **Upgrading can charge twice.** When a Premium user buys Premium Plus, checkout starts a second subscription instead of changing the existing one, so they would pay for both. Deleting the account would also cancel only one of them. (Seen in the code, not tested with Stripe.)
-2. **The Billing page says "Your subscription will be cancelled on…" for everyone.** It shows whenever there is a renewal date, not only when a cancellation is scheduled. (Confirmed: the subscription in the database is not set to cancel.)
+1. ✅ **Upgrading can charge twice.** When a Premium user buys Premium Plus, checkout starts a second subscription instead of changing the existing one, so they would pay for both. Deleting the account would also cancel only one of them. (Seen in the code, not tested with Stripe.)
+2. ✅ **The Billing page says "Your subscription will be cancelled on…" for everyone.** It shows whenever there is a renewal date, not only when a cancellation is scheduled. (Confirmed: the subscription in the database is not set to cancel.)
 3. **The color picker opens behind the premium modal.** A free user who clicks "Change resume color" gets the modal and the color picker at the same time. (Seen in a screenshot. Not tested whether a color picked there actually sticks.)
 4. **Logged-out visitors get an error on "Get Premium" / "Get Premium Plus".** Checkout needs an account, so the modal shows "Something went wrong". (Confirmed in the browser.)
 5. **The user's password hash is sent to the browser.** The layout gives the whole user record, including `passwordHash`, to the navbar, which runs in the browser. Only their own hash, but it should not be there. (Seen in the code: `(main)/layout.tsx` → `Navbar`.)
