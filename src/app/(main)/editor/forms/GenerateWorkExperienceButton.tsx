@@ -51,7 +51,7 @@ const GenerateWorkExperienceButton: FC<ComponentProps> = ({
         type="button"
         onClick={() => {
           if (!canUseAITools(subscriptionLevel)) {
-            premiumModal.setOpen(true);
+            premiumModal.openFor("pro");
             return;
           }
           setShowInputDialog(true);

@@ -1,15 +1,25 @@
 import { prisma } from "@/lib/prisma";
-import stripe from "@/lib/stripe";
 import { getCurrentSession } from "@/features/auth/session";
+import {
+  getUserSubscriptionLevel,
+  SubscriptionLevel,
+} from "@/lib/subscription";
+import { cn } from "@/lib/utils";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-import Stripe from "stripe";
 import GetSubscriptionButton from "./GetSubscriptionButton";
 import { formatDate } from "date-fns";
 import ManageSubscriptionButton from "./ManageSubscriptionButton";
 
 export const metadata: Metadata = {
   title: "Billing",
+};
+
+// The same names the premium modal uses, rather than the Stripe product name.
+const planNames: Record<SubscriptionLevel, string> = {
+  free: "Free",
+  pro: "Premium",
+  pro_plus: "Premium Plus",
 };
 
 export default async function Page() {
@@ -27,19 +37,20 @@ export default async function Page() {
     },
   });
 
-  const priceInfo = subscription
-    ? await stripe.prices.retrieve(subscription.stripePriceId, {
-        expand: ["product"],
-      })
-    : null;
+  const subscriptionLevel = await getUserSubscriptionLevel(session.user.id);
 
   return (
     <main className="mx-auto w-full max-w-7xl space-y-6 px-3 py-6">
       <h1 className="font-heading text-3xl font-bold">Billing</h1>
       <p>
         Your current plan:{" "}
-        <span className="font-bold">
-          {priceInfo ? (priceInfo.product as Stripe.Product).name : "Free"}
+        <span
+          className={cn(
+            "font-bold",
+            subscriptionLevel !== "free" && "text-sky-600 dark:text-sky-400",
+          )}
+        >
+          {planNames[subscriptionLevel]}
         </span>
       </p>
       {subscription ? (

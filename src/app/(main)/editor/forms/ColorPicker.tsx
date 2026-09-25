@@ -32,7 +32,7 @@ const ColorPicker: FC<ComponentProps> = ({ color, onChange }) => {
           title="Change resume color"
           onClick={() => {
             if (!canUseCustomizations(subscriptionLevel)) {
-              premiumModal.setOpen(true);
+              premiumModal.openFor("pro_plus");
               return;
             }
             setShowPopover(true);

@@ -9,7 +9,7 @@ export default function Page() {
         The checkout was successful and your Pro account has been activated.
         Enjoy!
       </p>
-      <Button asChild>
+      <Button asChild variant="premium">
         <Link href="/resumes">Go to resumes</Link>
       </Button>
     </main>

@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/dialog";
 import LoadingButton from "@/components/LoadingButton";
 import { useReactToPrint } from "react-to-print";
+import { getStepToOpen } from "../editor/getStepToOpen";
 
 interface ComponentProps {
   resume: ResumeServerData;
@@ -41,28 +42,32 @@ const ResumeItem: FC<ComponentProps> = ({ resume }) => {
 
   const wasUpdated = resume.updatedAt !== resume.createdAt;
 
+  // Open on the first step that isn't done yet, not always the first one.
+  const editorHref = `/editor?resumeId=${resume.id}&step=${getStepToOpen(resume)}`;
+
   return (
     <div className="group hover:border-border bg-secondary relative rounded-lg border border-transparent p-3 transition-colors">
       <div className="space-y-3">
         <Link
-          href={`/editor?resumeId=${resume.id}`}
-          className="inline-block w-full text-center"
+          href={editorHref}
+          className="inline-block w-full space-y-1.5 text-center"
         >
           <p className="line-clamp-1 px-9 font-semibold">
             {resume.title || "Untitled"}
           </p>
-          {resume.description && (
+          {resume.description ? (
             <p className="line-clamp-2 text-sm">{resume.description}</p>
+          ) : (
+            <p className="text-muted-foreground text-sm">
+              No description added
+            </p>
           )}
           <p className="text-muted-foreground text-xs">
             {wasUpdated ? "Updated" : "Created"} on{" "}
             {formatDate(resume.updatedAt, "MM d, yyyy h:mm a")}
           </p>
         </Link>
-        <Link
-          href={`/editor?resumeId=${resume.id}`}
-          className="relative inline-block w-full"
-        >
+        <Link href={editorHref} className="relative inline-block w-full">
           <ResumePreview
             resumeData={mapToResumeValues(resume)}
             contentRef={contentRef}
