@@ -45,3 +45,6 @@ next-env.d.ts
 
 # editor
 .vscode/
+
+# my convenience
+architecture/

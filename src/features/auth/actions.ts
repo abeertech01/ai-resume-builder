@@ -24,6 +24,25 @@ import {
 
 export type AuthActionResult = { error: string };
 
+// `redirectTo` comes from a query param (?redirect=) that middleware.ts sets,
+// but anyone can put anything there — e.g. a link to this app's own real
+// /sign-in page with ?redirect=https://evil.example. Only ever redirecting to
+// a same-site path (starts with a single "/", never "//" or "/\", both of
+// which browsers can treat as protocol-relative and send off-site) keeps a
+// crafted link from using a real login on this site to bounce someone
+// elsewhere right after they authenticate.
+function safeRedirectTarget(redirectTo: string | undefined): string {
+  if (
+    redirectTo &&
+    redirectTo.startsWith("/") &&
+    !redirectTo.startsWith("//") &&
+    !redirectTo.startsWith("/\\")
+  ) {
+    return redirectTo;
+  }
+  return "/resumes";
+}
+
 export async function signUp(values: SignUpValues): Promise<AuthActionResult> {
   const { firstName, lastName, email, password } = signUpSchema.parse(values);
 
@@ -58,10 +77,15 @@ export async function signUp(values: SignUpValues): Promise<AuthActionResult> {
   redirect("/resumes");
 }
 
-export async function logIn(values: LogInValues): Promise<AuthActionResult> {
+export async function logIn(
+  values: LogInValues,
+  redirectTo?: string,
+): Promise<AuthActionResult> {
   const { email, password } = logInSchema.parse(values);
 
-  const allowed = await checkRateLimit(`login:${email.toLowerCase()}`, {
+  // logInSchema already lowercases email, so this key and the findUnique
+  // lookup below always agree on casing.
+  const allowed = await checkRateLimit(`login:${email}`, {
     maxAttempts: 5,
     windowMs: 5 * 60 * 1000,
   });
@@ -86,7 +110,7 @@ export async function logIn(values: LogInValues): Promise<AuthActionResult> {
   const { token, expiresAt } = await createSession(user.id);
   await setSessionCookie(token, expiresAt);
 
-  redirect("/resumes");
+  redirect(safeRedirectTarget(redirectTo));
 }
 
 export async function logOut() {

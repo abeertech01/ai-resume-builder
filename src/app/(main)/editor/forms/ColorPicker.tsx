@@ -30,8 +30,14 @@ const ColorPicker: FC<ComponentProps> = ({ color, onChange }) => {
           variant={"outline"}
           size={"icon"}
           title="Change resume color"
-          onClick={() => {
+          onClick={(event) => {
             if (!canUseCustomizations(subscriptionLevel)) {
+              // Radix's PopoverTrigger also toggles the popover on this same
+              // click (composed after this handler). Without preventDefault,
+              // it would still force the popover open right after this
+              // returns, leaving it open (invisibly, behind the modal's
+              // overlay) even though the user isn't allowed to use it.
+              event.preventDefault();
               premiumModal.openFor("pro_plus");
               return;
             }

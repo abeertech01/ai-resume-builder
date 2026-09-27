@@ -17,7 +17,11 @@ import Link from "next/link";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
-export default function SignInForm() {
+interface SignInFormProps {
+  redirectTo?: string;
+}
+
+export default function SignInForm({ redirectTo }: SignInFormProps) {
   const [error, setError] = useState<string>();
   const [isPending, startTransition] = useTransition();
 
@@ -32,7 +36,7 @@ export default function SignInForm() {
   function onSubmit(values: LogInValues) {
     setError(undefined);
     startTransition(async () => {
-      const result = await logIn(values);
+      const result = await logIn(values, redirectTo);
       if (result?.error) setError(result.error);
     });
   }
