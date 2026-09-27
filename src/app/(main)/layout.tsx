@@ -23,9 +23,19 @@ export default async function Layout({
   return (
     <SubscriptionLevelProvider userSubscriptionLevel={userSubscriptionLevel}>
       <div className="flex min-h-screen flex-col">
-        <Navbar user={session?.user ?? null} />
+        <Navbar
+          user={
+            session
+              ? {
+                  firstName: session.user.firstName,
+                  lastName: session.user.lastName,
+                  email: session.user.email,
+                }
+              : null
+          }
+        />
         {children}
-        <PremiumModal />
+        <PremiumModal isLoggedIn={!!session} />
       </div>
     </SubscriptionLevelProvider>
   );

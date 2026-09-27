@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import {
   Dialog,
   DialogContent,
@@ -18,7 +19,16 @@ import { cn } from "@/lib/utils";
 const premiumFeatures = ["AI tools", "Up to 3 resumes"];
 const premiumPlusFeatures = ["Infinite resumes", "Design Customizations"];
 
-const PremiumModal = () => {
+interface PremiumModalProps {
+  // Anonymous visitors (building a resume without an account, see
+  // AnonymousResumeEditor) can trigger this same modal. Checkout needs a
+  // real account to attach the subscription to, so for them the buttons
+  // below go to sign-up instead of Stripe — otherwise createCheckoutSession
+  // would just throw "Unauthorized" and they'd see a generic error.
+  isLoggedIn: boolean;
+}
+
+const PremiumModal = ({ isLoggedIn }: PremiumModalProps) => {
   const { open, minimumPlan, close } = usePremiumModal();
 
   // When only Premium Plus unlocks what the user tried to use, offering
@@ -62,9 +72,11 @@ const PremiumModal = () => {
         </DialogHeader>
         <div className="space-y-6">
           <p>
-            {onlyPremiumPlus
-              ? "This is only available on the Premium Plus plan."
-              : "Get a premium subscription to unlock more features."}
+            {!isLoggedIn
+              ? "Create a free account first — you can subscribe right after signing up."
+              : onlyPremiumPlus
+                ? "This is only available on the Premium Plus plan."
+                : "Get a premium subscription to unlock more features."}
           </p>
           <div className="flex">
             {!onlyPremiumPlus && (
@@ -79,16 +91,24 @@ const PremiumModal = () => {
                       </li>
                     ))}
                   </ul>
-                  <Button
-                    onClick={() =>
-                      handlePremiumClick(
-                        env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_MONTHLY,
-                      )
-                    }
-                    disabled={loading}
-                  >
-                    Get Premium
-                  </Button>
+                  {isLoggedIn ? (
+                    <Button
+                      onClick={() =>
+                        handlePremiumClick(
+                          env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_MONTHLY,
+                        )
+                      }
+                      disabled={loading}
+                    >
+                      Get Premium
+                    </Button>
+                  ) : (
+                    <Button asChild>
+                      <Link href="/sign-up?from=editor">
+                        Sign up to get Premium
+                      </Link>
+                    </Button>
+                  )}
                 </div>
                 <div className="mx-6 border-l" />
               </>
@@ -110,17 +130,25 @@ const PremiumModal = () => {
                   </li>
                 ))}
               </ul>
-              <Button
-                variant={"premium"}
-                onClick={() =>
-                  handlePremiumClick(
-                    env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_PLUS_MONTHLY,
-                  )
-                }
-                disabled={loading}
-              >
-                Get Premium Plus
-              </Button>
+              {isLoggedIn ? (
+                <Button
+                  variant={"premium"}
+                  onClick={() =>
+                    handlePremiumClick(
+                      env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_PLUS_MONTHLY,
+                    )
+                  }
+                  disabled={loading}
+                >
+                  Get Premium Plus
+                </Button>
+              ) : (
+                <Button asChild variant={"premium"}>
+                  <Link href="/sign-up?from=editor">
+                    Sign up to get Premium Plus
+                  </Link>
+                </Button>
+              )}
             </div>
           </div>
         </div>

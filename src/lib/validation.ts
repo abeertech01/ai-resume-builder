@@ -107,17 +107,26 @@ export type GenerateWorkExperienceInput = z.infer<
   typeof generateWorkExperienceSchema
 >;
 
+// Lowercased so "Foo@x.com" and "foo@x.com" are treated as the same address —
+// otherwise they'd create (or look up) two different accounts.
+const emailField = z
+  .string()
+  .trim()
+  .min(1, "Required")
+  .email("Invalid email address")
+  .toLowerCase();
+
 export const signUpSchema = z.object({
   firstName: z.string().trim().min(1, "Required"),
   lastName: z.string().trim().min(1, "Required"),
-  email: z.string().trim().min(1, "Required").email("Invalid email address"),
+  email: emailField,
   password: z.string().min(8, "Must be at least 8 characters").max(255),
 });
 
 export type SignUpValues = z.infer<typeof signUpSchema>;
 
 export const logInSchema = z.object({
-  email: z.string().trim().min(1, "Required").email("Invalid email address"),
+  email: emailField,
   password: z.string().min(1, "Required"),
 });
 
